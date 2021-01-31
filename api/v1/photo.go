@@ -2,7 +2,6 @@ package api
 
 import (
 	"net/http"
-	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/photoprism/photoprism/internal/acl"
@@ -12,28 +11,9 @@ import (
 	"github.com/photoprism/photoprism/internal/i18n"
 	"github.com/photoprism/photoprism/internal/photoprism"
 	"github.com/photoprism/photoprism/internal/query"
-	"github.com/photoprism/photoprism/internal/service"
 	"github.com/photoprism/photoprism/pkg/fs"
 	"github.com/photoprism/photoprism/pkg/txt"
 )
-
-// SavePhotoAsYaml saves photo data as YAML file.
-func SavePhotoAsYaml(p entity.Photo) {
-	c := service.Config()
-
-	// Write YAML sidecar file (optional).
-	if !c.BackupYaml() {
-		return
-	}
-
-	fileName := p.YamlFileName(c.OriginalsPath(), c.SidecarPath())
-
-	if err := p.SaveAsYaml(fileName); err != nil {
-		log.Errorf("photo: %s (update yaml)", err)
-	} else {
-		log.Debugf("photo: updated yaml file %s", txt.Quote(filepath.Base(fileName)))
-	}
-}
 
 // GET /api/v1/photos/:uid
 //
