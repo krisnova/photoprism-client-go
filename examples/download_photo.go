@@ -25,7 +25,8 @@ func main() {
 	if pass == "" {
 		halt(2, "Missing PHOTOPRISM_PASS")
 	}
-	photoclient := photoprism.New()
+	login := photoprism.NewClientAuthLogin("username", "password")
+	photoclient := photoprism.New(login)
 	photo, err := photoclient.V1().GetPhoto("123")
 	if err != nil {
 		halt(3, "Error fetching photo: %v", err)
