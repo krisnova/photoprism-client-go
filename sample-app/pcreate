@@ -7,9 +7,7 @@
 #
 # Startup Script for the Application
 ####################################
-set -e
-
-echo "Starting [SampleApp]"
+echo "Creating [SampleApp]"
 
 docker run -d \
   --name photoprism \

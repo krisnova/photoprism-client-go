@@ -7,8 +7,6 @@
 #
 # Startup Script for the Application
 ####################################
-set -e
-
-echo "Stopping [SampleApp]"
+echo "Starting [SampleApp]"
 
 docker start photoprism

@@ -3,17 +3,37 @@ package sampleapp
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/kris-nova/logger"
 )
 
+// Script is a set of commands delimited by newlines
+// Comments # and // are ignored.
 type Script struct {
 	commands []string
 }
 
-func NewScript(str string) *Script {
+// NewScriptFromPath is used to build an executable script from a path of disk.
+func NewScriptFromPath(path string) (*Script, error) {
+	path, err := filepath.Abs(path)
+	if err != nil {
+		return nil, fmt.Errorf("unable to calculate fully qualified path for path: %s: %v", path, err)
+	}
+
+	bytes, err := ioutil.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("unable to read from path %s: %v", path, err)
+	}
+	content := string(bytes)
+	return NewScriptFromString(content), nil
+}
+
+// NewScriptFromString is used to build an executable script from the content in string form.
+func NewScriptFromString(str string) *Script {
 	script := &Script{}
 	spl := strings.Split(str, "\n")
 	//logger.Info("Script lines: %d", len(spl))
@@ -23,6 +43,8 @@ func NewScript(str string) *Script {
 	return script
 }
 
+// Interpret is used to procedurally execute a script. The script will execute each line independently
+// and can error at any point in the executation path.
 func (s *Script) Interpret() error {
 	//logger.Info("Running script...")
 	chResult := make(chan *ExecResult)
@@ -37,7 +59,7 @@ func (s *Script) Interpret() error {
 		// Ignore newlines
 		// Ignore comments starting with #
 		// Ignore comments starting with //
-		if cmdStr == "\n" || strings.HasPrefix(cmdStr, "#") || strings.HasPrefix(cmdStr, "//") {
+		if cmdStr == "\n" || cmdStr == "" || strings.HasPrefix(cmdStr, "#") || strings.HasPrefix(cmdStr, "//") {
 			continue
 		}
 		//logger.Info("Executing: [%s]", cmdStr)
@@ -45,7 +67,7 @@ func (s *Script) Interpret() error {
 		if err != nil {
 			return fmt.Errorf("error executing  running command [%s] on line [%d]\n%v\n", cmdStr, i+1, err)
 		} else if result.exitCode != 0 {
-			return fmt.Errorf("non zero exit code running command [%s] on line [%d]\n%s\n%s\n", cmdStr, i+1, result.Stdout(), result.stderr)
+			return fmt.Errorf("non zero exit code running command [%s] on line [%d]\n%s\n%s\n", cmdStr, i+1, result.Stdout(), result.Stderr())
 		}
 		// Here is where we log STDOUT from a "script"
 		// Right now it is set to DEBUG which can be enabled by
@@ -104,7 +126,7 @@ func Exec(str string) (*ExecResult, error) {
 	}
 	fqpcmd, err := exec.LookPath(cmdstr)
 	if err != nil {
-		return nil, fmt.Errorf("unable to find fully qualified path for executable %s: %v", cmdstr, err)
+		logger.Debug("unable to find fully qualified path for executable %s: %v", cmdstr, err)
 	}
 
 	//logger.Info("Command: %s", fqpcmd)
@@ -112,7 +134,10 @@ func Exec(str string) (*ExecResult, error) {
 
 	stdoutBuffer := bytes.Buffer{}
 	stderrBuffer := bytes.Buffer{}
-	e := []string{fqpcmd, fmt.Sprint(args)}
+	e := []string{fqpcmd}
+	for _, arg := range args {
+		e = append(e, arg)
+	}
 	cmd := exec.Command(e[0], e[1:]...)
 	cmd.Stdout = &stdoutBuffer
 	cmd.Stderr = &stderrBuffer
