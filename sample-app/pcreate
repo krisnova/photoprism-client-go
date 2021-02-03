@@ -1,0 +1,21 @@
+#!/bin/bash
+####################################
+#####
+###
+##
+#
+#
+# Startup Script for the Application
+####################################
+set -e
+
+echo "Starting [SampleApp]"
+
+docker run -d \
+  --name photoprism \
+  -p 8080:2342 \
+  -e PHOTOPRISM_UPLOAD_NSFW="true" \
+  -e PHOTOPRISM_ADMIN_PASSWORD="missy" \
+  -v photoprism:/photoprism \
+  photoprism/photoprism:latest
+

@@ -1,0 +1,16 @@
+#!/bin/bash
+####################################
+#####
+###
+##
+#
+#
+# Startup Script for the Application
+####################################
+set -e
+
+echo "Stopping [SampleApp]"
+
+docker stop photoprism
+#docker rm photoprism
+

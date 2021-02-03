@@ -1,0 +1,15 @@
+#!/bin/bash
+####################################
+#####
+###
+##
+#
+#
+# Startup Script for the Application
+####################################
+set -e
+
+echo "Starting [SampleApp]"
+
+docker logs -f --tail 100 photoprism
+
