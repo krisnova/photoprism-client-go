@@ -77,7 +77,7 @@ func (v1 *V1Client) GetPhoto(uuid string) (*Photo, error) {
 	if uuid == "" {
 		return nil, fmt.Errorf("missing uuid for GetPhoto [GET /api/v1/photos/:uuid]")
 	}
-	resp, err := v1.GET("photos/%s", uuid)
+	resp, err := v1.GET("api/v1/photos/%s", uuid)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get photo uuid=%s with error: %v", uuid, err)
 	}
