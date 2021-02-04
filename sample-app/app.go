@@ -45,6 +45,33 @@ func (a *SampleApplication) Stop() error {
 	return script.Interpret()
 }
 
+func (a *SampleApplication) Create() error {
+	logger.Info("Create Application...")
+	script, err := NewScriptFromPath(filepath.Join(PrintWorkingDirectory(), CreateCommand))
+	if err != nil {
+		return err
+	}
+	return script.Interpret()
+}
+
+func (a *SampleApplication) Destroy() error {
+	logger.Info("Destroying Application...")
+	script, err := NewScriptFromPath(filepath.Join(PrintWorkingDirectory(), DestroyCommand))
+	if err != nil {
+		return err
+	}
+	return script.Interpret()
+}
+
+func (a *SampleApplication) Logs() error {
+	logger.Info("Logging Application...")
+	script, err := NewScriptFromPath(filepath.Join(PrintWorkingDirectory(), LogsCommand))
+	if err != nil {
+		return err
+	}
+	return script.Interpret()
+}
+
 func (a *SampleApplication) GetAuth() photoprism.ClientAuthenticator {
 	return nil
 }

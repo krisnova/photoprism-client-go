@@ -8,12 +8,4 @@
 # Startup Script for the Application
 ####################################
 echo "Creating [SampleApp]"
-
-docker run -d \
-  --name photoprism \
-  -p 8080:2342 \
-  -e PHOTOPRISM_UPLOAD_NSFW="true" \
-  -e PHOTOPRISM_ADMIN_PASSWORD="missy" \
-  -v photoprism:/photoprism \
-  photoprism/photoprism:latest
-
+docker run -d --name photoprism -p 8080:2342 -e PHOTOPRISM_UPLOAD_NSFW="true" -e PHOTOPRISM_ADMIN_PASSWORD="missy" -v "/home/nova/go/src/github.com/kris-nova/client-go/sample-app/photoprism":"/photoprism" photoprism/photoprism

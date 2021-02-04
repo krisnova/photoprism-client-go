@@ -35,6 +35,10 @@ func NewScriptFromPath(path string) (*Script, error) {
 // NewScriptFromString is used to build an executable script from the content in string form.
 func NewScriptFromString(str string) *Script {
 	script := &Script{}
+
+	// "\\\n"
+	// ""
+	//str = strings.Replace(str, "\\\n", "", -1)
 	spl := strings.Split(str, "\n")
 	//logger.Info("Script lines: %d", len(spl))
 	for _, line := range spl {
@@ -47,12 +51,6 @@ func NewScriptFromString(str string) *Script {
 // and can error at any point in the executation path.
 func (s *Script) Interpret() error {
 	//logger.Info("Running script...")
-	chResult := make(chan *ExecResult)
-	chError := make(chan error)
-	chBreak := make(chan bool)
-	defer close(chResult)
-	defer close(chError)
-	defer close(chBreak)
 	for i, cmdStr := range s.commands {
 		// Exec will hang for output
 
