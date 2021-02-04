@@ -1,7 +1,9 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"time"
 )
 
@@ -71,18 +73,37 @@ type Photo struct {
 //
 // Parameters:
 //   uuid: string PhotoUID as returned by the API
-func (c *V1Client) GetPhoto(uuid string) (*Photo, error) {
+func (v1 *V1Client) GetPhoto(uuid string) (*Photo, error) {
 	if uuid == "" {
 		return nil, fmt.Errorf("missing uuid for GetPhoto [GET /api/v1/photos/:uuid]")
 	}
-	photo := &Photo{
+	resp, err := v1.GET("photos/%s", uuid)
+	if err != nil {
+		return nil, fmt.Errorf("unable to get photo uuid=%s with error: %v", uuid, err)
+	}
+	photo := Photo{
 		UUID: uuid,
 	}
-	return photo, nil
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse body: %v", err)
+	}
+
+	// The API returns HTML so we have to hack this shit up
+	// TODO @kris-nova This is where we left off
+	// TODO It looks like the API is returning HTML SMDH...
+	//fmt.Println(string(bytes))
+	//return nil, nil
+
+	err = json.Unmarshal(bytes, &photo)
+	if err != nil {
+		return nil, fmt.Errorf("unable to JSON unmarshal response body: %v", err)
+	}
+	return &photo, nil
 }
 
 // PUT /api/v1/photos/:uid
-func (c *V1Client) UpdatePhoto(update *Photo) (*Photo, error) {
+func (v1 *V1Client) UpdatePhoto(update *Photo) (*Photo, error) {
 	if update.UUID == "" {
 		return nil, fmt.Errorf("missing uuid for UpdatePhoto [PUT /api/v1/photos/:uid]")
 	}
@@ -96,7 +117,7 @@ func (c *V1Client) UpdatePhoto(update *Photo) (*Photo, error) {
 //
 // Parameters:
 //   uuid: string PhotoUUID as returned by the API
-func (c *V1Client) GetPhotoDownload(uuid string) (*File, error) {
+func (v1 *V1Client) GetPhotoDownload(uuid string) (*File, error) {
 	if uuid == "" {
 		return nil, fmt.Errorf("missing uuid for GetPhotoDownload [GET /api/v1/photos/:uuid/dl]")
 	}
@@ -108,7 +129,7 @@ func (c *V1Client) GetPhotoDownload(uuid string) (*File, error) {
 //
 // Parameters:
 //   uuid: string PhotoUUID as returned by the API
-func (c *V1Client) GetPhotoYaml(uuid string) (*Photo, error) {
+func (v1 *V1Client) GetPhotoYaml(uuid string) (*Photo, error) {
 	if uuid == "" {
 		return nil, fmt.Errorf("missing uuid for GetPhotoYAML [GET /api/v1/photos/:uuid/yaml]")
 	}
@@ -120,7 +141,7 @@ func (c *V1Client) GetPhotoYaml(uuid string) (*Photo, error) {
 //
 // Parameters:
 //   uuid: string PhotoUUID as returned by the API
-func (c *V1Client) ApprovePhoto(uuid string) (*Photo, error) {
+func (v1 *V1Client) ApprovePhoto(uuid string) (*Photo, error) {
 	if uuid == "" {
 		return nil, fmt.Errorf("missing uuid for ApprovePhoto [POST /api/v1/photos/:uuid/approve]")
 	}
@@ -132,7 +153,7 @@ func (c *V1Client) ApprovePhoto(uuid string) (*Photo, error) {
 //
 // Parameters:
 //   uid: string PhotoUID as returned by the API
-func (c *V1Client) LikePhoto(uuid string) error {
+func (v1 *V1Client) LikePhoto(uuid string) error {
 	if uuid == "" {
 		return fmt.Errorf("missing uuid for LikePhoto [POST /api/v1/photos/:uid/like]")
 	}
@@ -143,7 +164,7 @@ func (c *V1Client) LikePhoto(uuid string) error {
 //
 // Parameters:
 //   uuid: string PhotoUUID as returned by the API
-func (c *V1Client) DislikePhoto(uuid string) error {
+func (v1 *V1Client) DislikePhoto(uuid string) error {
 	if uuid == "" {
 		return fmt.Errorf("missing uuid for DislikePhoto [DELETE /api/v1/photos/:uuid/like]")
 	}
@@ -155,7 +176,7 @@ func (c *V1Client) DislikePhoto(uuid string) error {
 // Parameters:
 //   uid: string PhotoUID as returned by the API
 //   file_uid: string File UID as returned by the API
-func (c *V1Client) PhotoPrimary(uuid, fileuuid string) error {
+func (v1 *V1Client) PhotoPrimary(uuid, fileuuid string) error {
 	if uuid == "" {
 		return fmt.Errorf("missing uuid for PhotoPrimary [POST /api/v1/photos/:uid/files/:file_uid/primary]")
 	}
@@ -164,3 +185,40 @@ func (c *V1Client) PhotoPrimary(uuid, fileuuid string) error {
 	}
 	return nil
 }
+
+// -----
+// Dump from Chrome
+//
+//Request URL: http://localhost:8080/api/v1/photos/pqnzigq156lndozm
+//Request Method: PUT
+//Status Code: 200 OK
+//Remote Address: 127.0.0.1:8080
+//Referrer Policy: strict-origin-when-cross-origin
+
+// [RESPONSE HEADERS]
+//Content-Type: application/json; charset=utf-8
+//Date: Thu, 04 Feb 2021 04:27:16 GMT
+//Transfer-Encoding: chunked
+
+// [REQUEST HEADERS]
+//Accept: application/json, text/plain, */*
+//Accept-Encoding: gzip, deflate, br
+//Accept-Language: en-US,en;q=0.9
+//Connection: keep-alive
+//Content-Length: 41
+//Content-Type: application/json;charset=UTF-8
+//Host: localhost:8080
+//Origin: http://localhost:8080
+//Referer: http://localhost:8080/albums/aqnzih81icziiyae/february-2021
+//Sec-Fetch-Dest: empty
+//Sec-Fetch-Mode: cors
+//Sec-Fetch-Site: same-origin
+//User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36
+//X-Client-Hash: 2607a5a5
+//X-Client-Version: 210121-07e559df-Linux-x86_64
+//X-Session-ID: d92837cb1c41e37b9993d25e282efb3b337b6ae609a687d9
+
+// [REQUEST PAYLOAD]
+//{Title: "Test Nova", TitleSrc: "manual"}
+//Title: "Test Nova"
+//TitleSrc: "manual"
