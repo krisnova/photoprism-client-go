@@ -32,13 +32,25 @@ func NewScriptFromPath(path string) (*Script, error) {
 	return NewScriptFromString(content), nil
 }
 
+const (
+	// IgnoreSpacesBash is the amount of (spaces - 1) that we see in common \\n delimited commands
+	IgnoreSpacesBash string = "    "
+
+	// IgnoreTabs is the tab character
+	IgnoreTabs string = "\t"
+)
+
 // NewScriptFromString is used to build an executable script from the content in string form.
 func NewScriptFromString(str string) *Script {
 	script := &Script{}
-
-	// "\\\n"
-	// ""
-	//str = strings.Replace(str, "\\\n", "", -1)
+	removeRuleF := func(str string, rs []string) string {
+		for _, r := range rs {
+			str = strings.Replace(str, r, "", -1)
+		}
+		return str
+	}
+	str = strings.Replace(str, "\\\n", "", -1)
+	str = removeRuleF(str, []string{IgnoreSpacesBash, IgnoreTabs})
 	spl := strings.Split(str, "\n")
 	//logger.Info("Script lines: %d", len(spl))
 	for _, line := range spl {
@@ -53,14 +65,13 @@ func (s *Script) Interpret() error {
 	//logger.Info("Running script...")
 	for i, cmdStr := range s.commands {
 		// Exec will hang for output
-
 		// Ignore newlines
 		// Ignore comments starting with #
 		// Ignore comments starting with //
 		if cmdStr == "\n" || cmdStr == "" || strings.HasPrefix(cmdStr, "#") || strings.HasPrefix(cmdStr, "//") {
 			continue
 		}
-		//logger.Info("Executing: [%s]", cmdStr)
+		logger.Info("Executing: [%s]", cmdStr)
 		result, err := Exec(cmdStr)
 		if err != nil {
 			return fmt.Errorf("error executing  running command [%s] on line [%d]\n%v\n", cmdStr, i+1, err)
