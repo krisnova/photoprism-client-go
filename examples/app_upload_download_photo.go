@@ -9,6 +9,10 @@ func main() {
 	logger.Level = 4
 	app := sampleapp.New()
 	var err error
+	err = app.Create()
+	if err != nil {
+		logger.Critical(err.Error())
+	}
 	err = app.Start()
 	if err != nil {
 		logger.Critical(err.Error())

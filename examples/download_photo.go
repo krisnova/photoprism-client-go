@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	uuid := os.Getenv("PHOTOPRISM_ID")
+	uuid := os.Getenv("PHOTOPRISM_UUID")
 	if uuid == "" {
 		halt(2, "Missing PHOTOPRISM_UUID")
 	}
@@ -17,5 +17,6 @@ func main() {
 	if err != nil {
 		halt(3, "Error fetching photo: %v", err)
 	}
+
 	fmt.Println(*photo)
 }
