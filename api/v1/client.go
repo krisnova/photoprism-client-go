@@ -2,6 +2,7 @@ package api
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -15,70 +16,94 @@ const (
 )
 
 type V1Client struct {
-	token            string
-	connectionString string
-	client           http.Client
+	token   string
+	apihost *url.URL
+	client  http.Client
 }
 
-func New(connection, token string) *V1Client {
-	c := http.Client{}
+// New will only accept a url.URL so that we know
+// all errors have been handled up until this point
+func New(connURL *url.URL, token string) *V1Client {
 	return &V1Client{
-		client:           c,
-		connectionString: connection,
-		token:            token,
+		client:  http.Client{},
+		apihost: connURL,
+		token:   token,
 	}
 }
 
-func (v1 *V1Client) SetConnectionString(connection string) {
-	v1.connectionString = connection
+type V1Response struct {
+	HTTPResponse *http.Response
+	StatusCode   int
+	Error        error
+	Body         []byte
 }
 
-func (v1 *V1Client) SetToken(token string) {
-	v1.token = token
+func (r *V1Response) JSON(i interface{}) error {
+	if r.Error != nil {
+		// Handle errors from the HTTP request first
+		return fmt.Errorf("during HTTP request: %v", r.Error)
+	}
+	err := json.Unmarshal(r.Body, &i)
+	if err != nil {
+		return fmt.Errorf("during JSON unmarshal: %v", err)
+	}
+	return nil
 }
 
 // GET is the V1 GET function. By design it will check globally for all non 200
 // responses and return an error if a non 200 is encountered.
-func (v1 *V1Client) GET(format string, a ...interface{}) (*http.Response, error) {
-	str := fmt.Sprintf(format, a...)
-	//logger.Debug("GET [%s]", str)
-	url := v1.EndpointStr(str)
+func (v1 *V1Client) GET(format string, a ...interface{}) *V1Response {
+	url := v1.Endpoint(fmt.Sprintf(format, a...))
+	//logger.Debug("GET [%s]", url)
+	response := &V1Response{}
 	buffer := &bytes.Buffer{}
 	req, err := http.NewRequest("GET", url, buffer)
 	if err != nil {
-		return nil, fmt.Errorf("unable to generate new request: %v", err)
+		response.StatusCode = -1
+		response.Error = fmt.Errorf("unable to create new GET request: %v", err)
+		return response
 	}
 	req.Header.Set("Content-Type", DefaultContentType)
 	req.Header.Set("X-Session-Id", v1.token)
-	resp, err := http.DefaultClient.Do(req)
-
+	resp, err := v1.client.Do(req)
 	if err != nil {
-		return resp, err
+		response.Error = fmt.Errorf("error while executing GET request: %v", err)
+		return response
 	}
+	response.StatusCode = resp.StatusCode
+	response.HTTPResponse = resp
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		response.Error = fmt.Errorf("unable to read body: %v", err)
+		return response
+	}
+	response.Body = body
 	if resp.StatusCode != 200 {
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return resp, fmt.Errorf("[%d]: unable to read body: %v", err)
-		}
-		return resp, fmt.Errorf("[%d]: %s", resp.StatusCode, body)
+		response.Error = fmt.Errorf("[%d]: %s", resp.StatusCode, body)
+		return response
 	}
-	return resp, nil
+	return response
 }
 
-func (v1 *V1Client) EndpointStr(str string) string {
-	if strings.HasPrefix("/", str) {
-		str = fmt.Sprintf("%s%s", v1.connectionString, str)
+// Endpoint supports "/api/v1" and "api/v1" like strings
+// to generate the string type of a given endpoint based on
+// a client
+//
+// v1client := New("http://localhost:8080", "secret-token")
+// v1client.EndpointStr("/api/v1/photos") http://localhost:8080/api/v1/photos/
+// v1client.EndpointStr("api/v1/photos") http://localhost:8080/api/v1/photos/
+func (v1 *V1Client) Endpoint(str string) string {
+	var joined string
+	if strings.HasPrefix(str, "/") {
+		joined = fmt.Sprintf("%s%s", v1.apihost.String(), str)
 	} else {
-		str = fmt.Sprintf("%s/%s", v1.connectionString, str)
+		joined = fmt.Sprintf("%s/%s", v1.apihost.String(), str)
 	}
-	return str
+	return joined
 }
 
-func (v1 *V1Client) EndpointURL(str string) (*url.URL, error) {
-	if strings.HasPrefix("/", str) {
-		str = fmt.Sprintf("%s%s", v1.connectionString, str)
-	} else {
-		str = fmt.Sprintf("%s/%s", v1.connectionString, str)
-	}
-	return url.Parse(str)
+// SetToken can be used to set an auth token to use as the X-Session-Id
+// for this client
+func (v1 *V1Client) SetToken(token string) {
+	v1.token = token
 }

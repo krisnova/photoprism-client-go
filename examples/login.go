@@ -7,9 +7,8 @@ import (
 
 func main() {
 	logger.Level = 4
-	creds := photoprism.NewClientAuthLogin("admin", "missy")
-	client := photoprism.New("localhost:8080")
-	err := client.Auth(creds)
+	client := photoprism.New("http://localhost:8080")
+	err := client.Auth(photoprism.NewClientAuthLogin("admin", "missy"))
 	if err != nil {
 		halt(4, "Error logging into API: %v", err)
 	}

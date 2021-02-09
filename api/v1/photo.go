@@ -1,9 +1,7 @@
 package api
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"time"
 )
 
@@ -74,26 +72,11 @@ type Photo struct {
 // Parameters:
 //   uuid: string PhotoUID as returned by the API
 func (v1 *V1Client) GetPhoto(uuid string) (*Photo, error) {
-	if uuid == "" {
-		return nil, fmt.Errorf("missing uuid for GetPhoto [GET /api/v1/photos/:uuid]")
-	}
-	resp, err := v1.GET("api/v1/photos/%s", uuid)
-	if err != nil {
-		return nil, fmt.Errorf("unable to get photo uuid=%s with error: %v", uuid, err)
-	}
-	photo := Photo{
+	object := Photo{
 		UUID: uuid,
 	}
-	bytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("unable to parse body: %v", err)
-	}
-
-	err = json.Unmarshal(bytes, &photo)
-	if err != nil {
-		return nil, fmt.Errorf("unable to JSON unmarshal response body: %v", err)
-	}
-	return &photo, nil
+	err := v1.GET("/api/v1/photos/%s", uuid).JSON(&object)
+	return &object, err
 }
 
 // PUT /api/v1/photos/:uid
