@@ -1,0 +1,10 @@
+#!/bin/bash
+
+token=""
+server="localhost"
+port="8080"
+
+function photoget() {
+    url="http://${server}:${port}/${1}"
+    curl --header "X-Session-Id: ${token}" --header "Content-Type: application/json" ${url} | jq
+}

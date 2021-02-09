@@ -89,12 +89,6 @@ func (v1 *V1Client) GetPhoto(uuid string) (*Photo, error) {
 		return nil, fmt.Errorf("unable to parse body: %v", err)
 	}
 
-	// The API returns HTML so we have to hack this shit up
-	// TODO @kris-nova This is where we left off
-	// TODO It looks like the API is returning HTML SMDH...
-	//fmt.Println(string(bytes))
-	//return nil, nil
-
 	err = json.Unmarshal(bytes, &photo)
 	if err != nil {
 		return nil, fmt.Errorf("unable to JSON unmarshal response body: %v", err)

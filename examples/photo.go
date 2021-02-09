@@ -9,13 +9,15 @@ import (
 )
 
 func main() {
-	uuid := "pqnzigq156lndozm" // This is a known ID
-	client := photoprism.New(auth())
-	err := client.Login()
+	logger.Level = 4
+	uuid := "pqnzigq351j2fqgn" // This is a known ID
+	creds := photoprism.NewClientAuthLogin("admin", "missy")
+	client := photoprism.New("localhost:8080")
+	err := client.Auth(creds)
 	if err != nil {
 		halt(4, "Error logging into API: %v", err)
 	}
-	logger.Always("Login Success!")
+	//logger.Always("Login Success!")
 	photo, err := client.V1().GetPhoto(uuid)
 	if err != nil {
 		halt(3, "Error fetching photo: %v", err)

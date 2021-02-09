@@ -48,21 +48,3 @@ func TestMain(m *testing.M) {
 	// --- [ Tests ] ---
 
 }
-
-func TestHappyAPI(t *testing.T) {
-	// Code to validate the API
-	if true {
-		t.Logf("Success!\n")
-	} else {
-		t.Errorf("Failure!\n")
-	}
-}
-
-func TestSadAPI(t *testing.T) {
-	// Code to validate the API
-	if !false {
-		t.Logf("Success!\n")
-	} else {
-		t.Errorf("Failure!\n")
-	}
-}

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -19,18 +20,15 @@ const (
 	DefaultLoopback         string = "127.0.0.1"
 	DefaultPort             string = "8080"
 	DefaultConnectionString string = "http://localhost:8080"
+	DefaultTokenKey         string = "X-Session-Id"
 )
 
-// New is used to initialize a new *Client
-func New(auth ClientAuthenticator) *Client {
-
-	p := &Client{
-		v1client:         &api.V1Client{},
-		authenticator:    auth,
+func New(connectionString string) *Client {
+	c := &Client{
 		contentType:      DefaultContentType,
 		connectionString: DefaultConnectionString,
 	}
-	return p
+	return c
 }
 
 // Client represents a client to a Photoprism application
@@ -87,7 +85,8 @@ func (c *Client) V1() *api.V1Client {
 }
 
 // Login is used to attempt to authenticate with the Photoprism API
-func (c *Client) Login() error {
+func (c *Client) Auth(auth ClientAuthenticator) error {
+	c.authenticator = auth
 	// @kris-nova We are returning V1 by default
 	return c.LoginV1()
 }
@@ -101,13 +100,22 @@ func (c *Client) LoginV1() error {
 		return fmt.Errorf("JSON marshal error: %v", err)
 	}
 	buffer := bytes.NewBuffer(body)
-	resp, err := http.Post(c.Endpoint("v1/session"), c.contentType, buffer)
+	resp, err := http.Post(c.Endpoint("api/v1/session"), c.contentType, buffer)
 	if err != nil {
 		return fmt.Errorf("authentication error: %v", err)
 	}
-	token := resp.Header.Get("X-Session-Id")
-	c.v1client.SetToken(token)
-	c.v1client.SetConnectionString(c.connectionString)
+	if resp.StatusCode != 200 {
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return fmt.Errorf("unable to parse body for [%d] response: %v", resp.StatusCode, err)
+		}
+		return fmt.Errorf("login error [%d] %s", resp.StatusCode, body)
+	}
+	token := resp.Header.Get(DefaultTokenKey)
+	if token == "" {
+		return fmt.Errorf("missing auth token from successful login")
+	}
+	c.v1client = api.New(c.connectionString, token)
 	return nil
 }
 
