@@ -7,10 +7,10 @@ import (
 	"sort"
 
 	"github.com/dsoprea/go-exif/v2"
-	log "github.com/dsoprea/go-logging"
-	ridata "github.com/dsoprea/go-utility/data"
-	rifs "github.com/dsoprea/go-utility/filesystem"
-	riimage "github.com/dsoprea/go-utility/image"
+	"github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-utility/data"
+	"github.com/dsoprea/go-utility/filesystem"
+	"github.com/dsoprea/go-utility/image"
 	"go4.org/media/heif"
 	"go4.org/media/heif/bmff"
 )

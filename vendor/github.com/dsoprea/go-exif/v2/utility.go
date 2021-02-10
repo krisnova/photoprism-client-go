@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	log "github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-logging"
 
-	exifcommon "github.com/dsoprea/go-exif/v2/common"
-	exifundefined "github.com/dsoprea/go-exif/v2/undefined"
+	"github.com/dsoprea/go-exif/v2/common"
+	"github.com/dsoprea/go-exif/v2/undefined"
 )
 
 var (

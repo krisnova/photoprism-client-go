@@ -6,30 +6,22 @@ import (
 	photoprism "github.com/kris-nova/client-go"
 )
 
-const (
-	WellKnownUser = "admin"
-	WellKnownPass = "missy"
-	BadPassword   = "charlie"
-)
-
 // TestHappyLogin should succeed with the good password "missy"
 func TestHappyLogin(t *testing.T) {
-	creds := photoprism.NewClientAuthLogin(WellKnownUser, WellKnownPass)
-	client := photoprism.New("localhost:8080")
-	err := client.Auth(creds)
+	client := photoprism.New(WellKnownSampleAppConnectionString)
+	err := client.Auth(photoprism.NewClientAuthLogin(WellKnownUser, WellKnownPass))
 	if err != nil {
-		t.Errorf("invalid login: %v", err)
+		t.Errorf("expected login: %v", err)
+		t.FailNow()
 	}
 }
 
 // TestSadLogin should fail with the bad password "charlie"
 func TestSadLogin(t *testing.T) {
-	creds := photoprism.NewClientAuthLogin(WellKnownUser, BadPassword)
-	client := photoprism.New("localhost:8080")
-	err := client.Auth(creds)
+	client := photoprism.New(WellKnownSampleAppConnectionString)
+	err := client.Auth(photoprism.NewClientAuthLogin(WellKnownUser, BadPassword))
 	if err == nil {
-		t.Errorf("Missing error for known bad password")
-		return
+		t.Errorf("expecting error for known bad password")
+		t.FailNow()
 	}
-	t.Logf("Successful bad password auth attempt: %v", err)
 }

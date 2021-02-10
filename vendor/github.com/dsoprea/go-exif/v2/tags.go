@@ -3,10 +3,10 @@ package exif
 import (
 	"fmt"
 
-	log "github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-logging"
 	"gopkg.in/yaml.v2"
 
-	exifcommon "github.com/dsoprea/go-exif/v2/common"
+	"github.com/dsoprea/go-exif/v2/common"
 )
 
 const (

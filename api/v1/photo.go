@@ -71,23 +71,18 @@ type Photo struct {
 //
 // Parameters:
 //   uuid: string PhotoUID as returned by the API
-func (v1 *V1Client) GetPhoto(uuid string) (*Photo, error) {
+func (v1 *V1Client) GetPhoto(uuid string) (Photo, error) {
 	object := Photo{
 		UUID: uuid,
 	}
 	err := v1.GET("/api/v1/photos/%s", uuid).JSON(&object)
-	return &object, err
+	return object, err
 }
 
 // PUT /api/v1/photos/:uid
-func (v1 *V1Client) UpdatePhoto(update *Photo) (*Photo, error) {
-	if update.UUID == "" {
-		return nil, fmt.Errorf("missing uuid for UpdatePhoto [PUT /api/v1/photos/:uid]")
-	}
-	ref := *update
-	updated := &ref
-	// TODO Execute Request()
-	return updated, nil
+func (v1 *V1Client) UpdatePhoto(object Photo) (Photo, error) {
+	err := v1.PUT(&object, "/api/v1/photos/%s", object.UUID).JSON(&object)
+	return object, err
 }
 
 // GET /api/v1/photos/:uuid/dl

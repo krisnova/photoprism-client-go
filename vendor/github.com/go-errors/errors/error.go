@@ -139,6 +139,7 @@ func WrapPrefix(e interface{}, prefix string, skip int) *Error {
 
 }
 
+
 // Errorf creates a new error with the given message. You can use it
 // as a drop-in replacement for fmt.Errorf() to provide descriptive
 // errors in return values.

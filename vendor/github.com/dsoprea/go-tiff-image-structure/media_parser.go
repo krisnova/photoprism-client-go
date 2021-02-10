@@ -8,8 +8,8 @@ import (
 	"io/ioutil"
 
 	"github.com/dsoprea/go-exif/v2"
-	log "github.com/dsoprea/go-logging"
-	riimage "github.com/dsoprea/go-utility/image"
+	"github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-utility/image"
 )
 
 // TiffMediaParser knows how to parse a TIFF stream.

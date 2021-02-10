@@ -7,8 +7,9 @@ import (
 
 	"encoding/binary"
 
-	exifcommon "github.com/dsoprea/go-exif/v2/common"
-	log "github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-logging"
+
+	"github.com/dsoprea/go-exif/v2/common"
 )
 
 const (

@@ -1,7 +1,17 @@
+# github.com/Azure/go-autorest/autorest v0.11.17
+## explicit
+# github.com/Azure/go-autorest/autorest/adal v0.9.12
+## explicit
 # github.com/araddon/dateparse v0.0.0-20210204225525-33e44430e129
 github.com/araddon/dateparse
+# github.com/aws/aws-sdk-go v1.37.8
+## explicit
+# github.com/c-bata/go-prompt v0.2.5
+## explicit
 # github.com/cpuguy83/go-md2man/v2 v2.0.0
 github.com/cpuguy83/go-md2man/v2/md2man
+# github.com/digitalocean/godo v1.57.0
+## explicit
 # github.com/disintegration/imaging v1.6.2
 ## explicit
 github.com/disintegration/imaging
@@ -51,6 +61,8 @@ github.com/gin-gonic/gin/internal/json
 github.com/gin-gonic/gin/render
 # github.com/go-errors/errors v1.1.1
 github.com/go-errors/errors
+# github.com/go-ini/ini v1.62.0
+## explicit
 # github.com/go-playground/locales v0.13.0
 github.com/go-playground/locales
 github.com/go-playground/locales/currency
@@ -72,6 +84,8 @@ github.com/golang/geo/s2
 github.com/golang/protobuf/proto
 # github.com/google/open-location-code/go v0.0.0-20201229230907-d47d9f9b95e9
 github.com/google/open-location-code/go
+# github.com/gophercloud/gophercloud v0.15.0
+## explicit
 # github.com/gorilla/websocket v1.4.2
 ## explicit
 github.com/gorilla/websocket
@@ -95,12 +109,16 @@ github.com/json-iterator/go
 github.com/karrick/godirwalk
 # github.com/klauspost/cpuid/v2 v2.0.3
 github.com/klauspost/cpuid/v2
+# github.com/kris-nova/klone v1.2.0
+## explicit
 # github.com/kris-nova/logger v0.0.0-20181127235838-fd0d87064b06
 ## explicit
 github.com/kris-nova/logger
 # github.com/kris-nova/lolgopher v0.0.0-20210112022122-73f0047e8b65
 ## explicit
 github.com/kris-nova/lolgopher
+# github.com/kubicorn/kubicorn v0.0.0-20191114212505-a2c64ce430b9
+## explicit
 # github.com/leandro-lugaresi/hub v1.1.1
 github.com/leandro-lugaresi/hub
 # github.com/leodido/go-urn v1.2.1
@@ -118,10 +136,14 @@ github.com/mattn/go-isatty
 github.com/mattn/go-sqlite3
 # github.com/melihmucuk/geocache v0.0.0-20160621165317-521b336a001c
 github.com/melihmucuk/geocache
+# github.com/minio/minio-go v6.0.14+incompatible
+## explicit
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
+# github.com/packethost/packngo v0.6.0
+## explicit
 # github.com/patrickmn/go-cache v2.1.0+incompatible
 github.com/patrickmn/go-cache
 # github.com/paulmach/go.geojson v1.4.0
@@ -160,6 +182,8 @@ github.com/photoprism/photoprism/pkg/pluscode
 github.com/photoprism/photoprism/pkg/rnd
 github.com/photoprism/photoprism/pkg/s2
 github.com/photoprism/photoprism/pkg/txt
+# github.com/pkg/sftp v1.12.0
+## explicit
 # github.com/rainycape/unidecode v0.0.0-20150907023854-cb7f23ec59be
 github.com/rainycape/unidecode
 # github.com/russross/blackfriday/v2 v2.1.0
@@ -170,8 +194,12 @@ github.com/satori/go.uuid
 github.com/shopspring/decimal
 # github.com/sirupsen/logrus v1.7.0
 github.com/sirupsen/logrus
+# github.com/spf13/viper v1.7.1
+## explicit
 # github.com/studio-b12/gowebdav v0.0.0-20210203212356-8244b5a5f51a
 github.com/studio-b12/gowebdav
+# github.com/tcnksm/go-gitconfig v0.1.2
+## explicit
 # github.com/tensorflow/tensorflow v1.15.2
 github.com/tensorflow/tensorflow/tensorflow/go
 github.com/tensorflow/tensorflow/tensorflow/go/op
@@ -187,6 +215,8 @@ github.com/ugorji/go/codec
 github.com/ulule/deepcopier
 # github.com/urfave/cli v1.22.5
 github.com/urfave/cli
+# github.com/yuroyoro/swalker v0.0.0-20160622113523-0a5950e9162f
+## explicit
 # go4.org v0.0.0-20200411211856-f5505b9728dd
 go4.org/media/heif
 go4.org/media/heif/bmff
@@ -233,8 +263,16 @@ google.golang.org/protobuf/reflect/protoreflect
 google.golang.org/protobuf/reflect/protoregistry
 google.golang.org/protobuf/runtime/protoiface
 google.golang.org/protobuf/runtime/protoimpl
+# gopkg.in/src-d/go-git.v4 v4.13.1
+## explicit
 # gopkg.in/ugjka/go-tz.v2 v2.0.12
 gopkg.in/ugjka/go-tz.v2/tz
 # gopkg.in/yaml.v2 v2.4.0
 ## explicit
 gopkg.in/yaml.v2
+# k8s.io/apiextensions-apiserver v0.20.2
+## explicit
+# k8s.io/client-go v11.0.0+incompatible
+## explicit
+# k8s.io/klog v1.0.0
+## explicit

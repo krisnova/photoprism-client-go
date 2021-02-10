@@ -5,7 +5,7 @@ import (
 
 	"encoding/binary"
 
-	log "github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-logging"
 )
 
 var (

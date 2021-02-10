@@ -1,9 +1,9 @@
 package exif
 
 import (
-	log "github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-logging"
 
-	exifcommon "github.com/dsoprea/go-exif/v2/common"
+	"github.com/dsoprea/go-exif/v2/common"
 )
 
 // TODO(dustin): This file now exists for backwards-compatibility only.

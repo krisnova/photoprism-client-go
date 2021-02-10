@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	log "github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-logging"
 )
 
 // DumpBytes prints a list of hex-encoded bytes.

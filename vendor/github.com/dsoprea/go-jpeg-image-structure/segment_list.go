@@ -10,7 +10,7 @@ import (
 
 	"github.com/dsoprea/go-exif/v2"
 	"github.com/dsoprea/go-iptc"
-	log "github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-logging"
 )
 
 // SegmentList contains a slice of segments.

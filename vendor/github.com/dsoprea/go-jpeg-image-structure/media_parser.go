@@ -6,8 +6,8 @@ import (
 	"io"
 	"os"
 
-	log "github.com/dsoprea/go-logging"
-	riimage "github.com/dsoprea/go-utility/image"
+	"github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-utility/image"
 )
 
 // JpegMediaParser is a `riimage.MediaParser` that knows how to parse JPEG

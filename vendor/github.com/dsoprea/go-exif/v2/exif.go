@@ -11,9 +11,9 @@ import (
 	"encoding/binary"
 	"io/ioutil"
 
-	log "github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-logging"
 
-	exifcommon "github.com/dsoprea/go-exif/v2/common"
+	"github.com/dsoprea/go-exif/v2/common"
 )
 
 const (

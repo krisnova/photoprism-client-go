@@ -10,9 +10,9 @@ import (
 
 	"github.com/dsoprea/go-exif/v2"
 	"github.com/dsoprea/go-iptc"
-	log "github.com/dsoprea/go-logging"
-	photoshopinfo "github.com/dsoprea/go-photoshop-info-format"
-	riimage "github.com/dsoprea/go-utility/image"
+	"github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-photoshop-info-format"
+	"github.com/dsoprea/go-utility/image"
 )
 
 const (

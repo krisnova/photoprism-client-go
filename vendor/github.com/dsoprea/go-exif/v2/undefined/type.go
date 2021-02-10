@@ -5,7 +5,7 @@ import (
 
 	"encoding/binary"
 
-	exifcommon "github.com/dsoprea/go-exif/v2/common"
+	"github.com/dsoprea/go-exif/v2/common"
 )
 
 const (

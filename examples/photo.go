@@ -21,6 +21,7 @@ func main() {
 	if err != nil {
 		halt(3, "Error fetching photo: %v", err)
 	}
+
 	bytes, err := json.Marshal(photo)
 	if err != nil {
 		halt(5, "Error: %v", err)

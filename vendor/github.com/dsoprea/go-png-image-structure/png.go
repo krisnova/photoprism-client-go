@@ -10,8 +10,8 @@ import (
 	"hash/crc32"
 
 	"github.com/dsoprea/go-exif/v2"
-	log "github.com/dsoprea/go-logging"
-	riimage "github.com/dsoprea/go-utility/image"
+	"github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-utility/image"
 )
 
 var (

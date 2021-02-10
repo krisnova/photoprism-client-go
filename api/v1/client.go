@@ -52,22 +52,133 @@ func (r *V1Response) JSON(i interface{}) error {
 
 // GET is the V1 GET function. By design it will check globally for all non 200
 // responses and return an error if a non 200 is encountered.
-func (v1 *V1Client) GET(format string, a ...interface{}) *V1Response {
-	url := v1.Endpoint(fmt.Sprintf(format, a...))
+//
+// Error Codes:
+//    -1   Unable to create request
+func (v1 *V1Client) GET(endpointFormat string, a ...interface{}) *V1Response {
+	url := v1.Endpoint(fmt.Sprintf(endpointFormat, a...))
 	//logger.Debug("GET [%s]", url)
 	response := &V1Response{}
 	buffer := &bytes.Buffer{}
 	req, err := http.NewRequest("GET", url, buffer)
 	if err != nil {
 		response.StatusCode = -1
-		response.Error = fmt.Errorf("unable to create new GET request: %v", err)
+		response.Error = fmt.Errorf("unable to create new request: %v", err)
 		return response
 	}
 	req.Header.Set("Content-Type", DefaultContentType)
 	req.Header.Set("X-Session-Id", v1.token)
 	resp, err := v1.client.Do(req)
 	if err != nil {
-		response.Error = fmt.Errorf("error while executing GET request: %v", err)
+		response.Error = fmt.Errorf("error while executing request: %v", err)
+		return response
+	}
+	response.StatusCode = resp.StatusCode
+	response.HTTPResponse = resp
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		response.Error = fmt.Errorf("unable to read body: %v", err)
+		return response
+	}
+	response.Body = body
+	if resp.StatusCode != 200 {
+		response.Error = fmt.Errorf("[%d]: %s", resp.StatusCode, body)
+		return response
+	}
+	return response
+}
+
+// POST is the V1 POST function. By design it will check globally for all non 200
+// responses and return an error if a non 200 is encountered.
+// POST will accept a payload.
+//
+// Error Codes:
+//    -1   Unable to create request
+//    -2   Unable to write payload
+//    -3   Unable to JSON Marshal
+func (v1 *V1Client) POST(payload interface{}, endpointFormat string, a ...interface{}) *V1Response {
+	url := v1.Endpoint(fmt.Sprintf(endpointFormat, a...))
+	//logger.Debug("POST [%s]", url)
+	response := &V1Response{}
+	jBytes, err := json.Marshal(&payload)
+	if err != nil {
+		response.StatusCode = -3
+		response.Error = fmt.Errorf("unable to marshal JSON: %v", err)
+		return response
+	}
+	buffer := &bytes.Buffer{}
+	_, err = buffer.Write(jBytes)
+	if err != nil {
+		response.StatusCode = -2
+		response.Error = fmt.Errorf("unable to write payload: %v", err)
+		return response
+	}
+
+	req, err := http.NewRequest("POST", url, buffer)
+	if err != nil {
+		response.StatusCode = -1
+		response.Error = fmt.Errorf("unable to create new request: %v", err)
+		return response
+	}
+	req.Header.Set("Content-Type", DefaultContentType)
+	req.Header.Set("X-Session-Id", v1.token)
+	resp, err := v1.client.Do(req)
+	if err != nil {
+		response.Error = fmt.Errorf("error while executing request: %v", err)
+		return response
+	}
+	response.StatusCode = resp.StatusCode
+	response.HTTPResponse = resp
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		response.Error = fmt.Errorf("unable to read body: %v", err)
+		return response
+	}
+	response.Body = body
+	if resp.StatusCode != 200 {
+		response.Error = fmt.Errorf("[%d]: %s", resp.StatusCode, body)
+		return response
+	}
+	return response
+}
+
+// PUT is the V1 POST function. By design it will check globally for all non 200
+// responses and return an error if a non 200 is encountered.
+// PUT will accept a payload.
+//
+// Error Codes:
+//    -1   Unable to create request
+//    -2   Unable to write payload
+//    -3   Unable to JSON Marshal
+func (v1 *V1Client) PUT(payload interface{}, endpointFormat string, a ...interface{}) *V1Response {
+	url := v1.Endpoint(fmt.Sprintf(endpointFormat, a...))
+	//logger.Debug("POST [%s]", url)
+	response := &V1Response{}
+	jBytes, err := json.Marshal(&payload)
+	if err != nil {
+		response.StatusCode = -3
+		response.Error = fmt.Errorf("unable to marshal JSON: %v", err)
+		return response
+	}
+	buffer := &bytes.Buffer{}
+	_, err = buffer.Write(jBytes)
+	if err != nil {
+		response.StatusCode = -2
+		response.Error = fmt.Errorf("unable to write payload: %v", err)
+		return response
+	}
+
+	req, err := http.NewRequest("PUT", url, buffer)
+	if err != nil {
+		response.StatusCode = -1
+		response.Error = fmt.Errorf("unable to create new request: %v", err)
+		return response
+	}
+	req.Header.Set("Content-Type", DefaultContentType)
+	req.Header.Set("X-Session-Id", v1.token)
+	resp, err := v1.client.Do(req)
+	if err != nil {
+		response.Error = fmt.Errorf("error while executing request: %v", err)
 		return response
 	}
 	response.StatusCode = resp.StatusCode

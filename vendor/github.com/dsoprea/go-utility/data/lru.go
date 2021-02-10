@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	log "github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-logging"
 )
 
 var (

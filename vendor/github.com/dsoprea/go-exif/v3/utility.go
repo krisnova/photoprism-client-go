@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"math"
 
-	log "github.com/dsoprea/go-logging"
+	"github.com/dsoprea/go-logging"
 
-	exifcommon "github.com/dsoprea/go-exif/v3/common"
-	exifundefined "github.com/dsoprea/go-exif/v3/undefined"
+	"github.com/dsoprea/go-exif/v3/common"
+	"github.com/dsoprea/go-exif/v3/undefined"
 )
 
 var (

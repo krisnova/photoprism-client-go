@@ -5,10 +5,24 @@ import (
 	"strings"
 	"testing"
 
+	photoprism "github.com/kris-nova/client-go"
+
 	"github.com/kris-nova/logger"
 
 	sampleapp "github.com/kris-nova/client-go/sample-app"
 )
+
+const (
+	WellKnownUser                      = "admin"
+	WellKnownPass                      = "missy"
+	BadPassword                        = "charlie"
+	WellKnownPhotoID                   = "pqnzigq351j2fqgn" // This is a photo in the persistent sample app
+	WellKnownSampleAppConnectionString = "http://localhost:8080"
+)
+
+// Client is a pre-authenticated client that can be used
+// internally to access the SDK
+var Client *photoprism.Client
 
 func TestMain(m *testing.M) {
 	logger.Level = 4
@@ -38,6 +52,15 @@ func TestMain(m *testing.M) {
 		logger.Critical("Unable to start app: %v", err)
 		os.Exit(2)
 	}
+
+	// --- [ Client ] ---
+	client := photoprism.New(WellKnownSampleAppConnectionString)
+	err = client.Auth(photoprism.NewClientAuthLogin(WellKnownUser, WellKnownPass))
+	if err != nil {
+		logger.Critical("Error during testing auth: %v", err)
+		os.Exit(3)
+	}
+	Client = client
 
 	// --- [ Tests ] ----
 	exitCode := m.Run()
