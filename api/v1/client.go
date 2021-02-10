@@ -16,18 +16,20 @@ const (
 )
 
 type V1Client struct {
-	token   string
-	apihost *url.URL
-	client  http.Client
+	downloadToken string
+	token         string
+	apihost       *url.URL
+	client        http.Client
 }
 
 // New will only accept a url.URL so that we know
 // all errors have been handled up until this point
-func New(connURL *url.URL, token string) *V1Client {
+func New(connURL *url.URL, token, downloadToken string) *V1Client {
 	return &V1Client{
-		client:  http.Client{},
-		apihost: connURL,
-		token:   token,
+		client:        http.Client{},
+		apihost:       connURL,
+		token:         token,
+		downloadToken: downloadToken,
 	}
 }
 
@@ -169,6 +171,60 @@ func (v1 *V1Client) PUT(payload interface{}, endpointFormat string, a ...interfa
 	}
 
 	req, err := http.NewRequest("PUT", url, buffer)
+	if err != nil {
+		response.StatusCode = -1
+		response.Error = fmt.Errorf("unable to create new request: %v", err)
+		return response
+	}
+	req.Header.Set("Content-Type", DefaultContentType)
+	req.Header.Set("X-Session-Id", v1.token)
+	resp, err := v1.client.Do(req)
+	if err != nil {
+		response.Error = fmt.Errorf("error while executing request: %v", err)
+		return response
+	}
+	response.StatusCode = resp.StatusCode
+	response.HTTPResponse = resp
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		response.Error = fmt.Errorf("unable to read body: %v", err)
+		return response
+	}
+	response.Body = body
+	if resp.StatusCode != 200 {
+		response.Error = fmt.Errorf("[%d]: %s", resp.StatusCode, body)
+		return response
+	}
+	return response
+}
+
+// DELETE is the V1 POST function. By design it will check globally for all non 200
+// responses and return an error if a non 200 is encountered.
+// DELETE will accept a payload.
+//
+// Error Codes:
+//    -1   Unable to create request
+//    -2   Unable to write payload
+//    -3   Unable to JSON Marshal
+func (v1 *V1Client) DELETE(payload interface{}, endpointFormat string, a ...interface{}) *V1Response {
+	url := v1.Endpoint(fmt.Sprintf(endpointFormat, a...))
+	//logger.Debug("POST [%s]", url)
+	response := &V1Response{}
+	jBytes, err := json.Marshal(&payload)
+	if err != nil {
+		response.StatusCode = -3
+		response.Error = fmt.Errorf("unable to marshal JSON: %v", err)
+		return response
+	}
+	buffer := &bytes.Buffer{}
+	_, err = buffer.Write(jBytes)
+	if err != nil {
+		response.StatusCode = -2
+		response.Error = fmt.Errorf("unable to write payload: %v", err)
+		return response
+	}
+
+	req, err := http.NewRequest("DELETE", url, buffer)
 	if err != nil {
 		response.StatusCode = -1
 		response.Error = fmt.Errorf("unable to create new request: %v", err)

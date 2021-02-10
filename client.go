@@ -124,11 +124,25 @@ func (c *Client) LoginV1() error {
 		}
 		return fmt.Errorf("login error [%d] %s", resp.StatusCode, body)
 	}
+
+	// --- JSON Auth Response on to Options ---
+	cfg := &Config{
+		Config: &Options{},
+	}
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("unable to parse auth body: %v", err)
+	}
+	err = json.Unmarshal(bytes, &cfg)
+	if err != nil {
+		return fmt.Errorf("unable to json unmarshal auth body: %v", err)
+	}
+
 	token := resp.Header.Get(APIAuthHeaderKey)
 	if token == "" {
 		return fmt.Errorf("missing auth token from successful login")
 	}
-	c.v1client = v1.New(c.connectionURL, token)
+	c.v1client = v1.New(c.connectionURL, token, cfg.Config.DownloadToken)
 	return nil
 }
 

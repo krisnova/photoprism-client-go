@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -51,14 +50,14 @@ type Photo struct {
 	CameraSerial     string    `gorm:"type:VARBINARY(255);" json:"CameraSerial" yaml:"CameraSerial,omitempty"`
 	CameraSrc        string    `gorm:"type:VARBINARY(8);" json:"CameraSrc" yaml:"-"`
 	LensID           uint      `gorm:"index:idx_photos_camera_lens;default:1" json:"LensID" yaml:"-"`
-	//Details          *Details     `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Details" yaml:"Details"`
+	//Details          *Details  `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Details" yaml:"Details"`
 	//Camera           *Camera      `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Camera" yaml:"-"`
 	//Lens             *Lens        `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Lens" yaml:"-"`
 	//Cell             *Cell        `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Cell" yaml:"-"`
 	//Place            *Place       `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Place" yaml:"-"`
 	//Keywords         []Keyword    `json:"-" yaml:"-"`
 	//Albums           []Album      `json:"-" yaml:"-"`
-	//Files            []File       `yaml:"-"`
+	Files []File `yaml:"-"`
 	//Labels           []PhotoLabel `yaml:"-"`
 	CreatedAt time.Time  `yaml:"CreatedAt,omitempty"`
 	UpdatedAt time.Time  `yaml:"UpdatedAt,omitempty"`
@@ -80,6 +79,9 @@ func (v1 *V1Client) GetPhoto(uuid string) (Photo, error) {
 }
 
 // PUT /api/v1/photos/:uid
+//
+// Parameters:
+//   uuid: string PhotoUUID as returned by the API
 func (v1 *V1Client) UpdatePhoto(object Photo) (Photo, error) {
 	err := v1.PUT(&object, "/api/v1/photos/%s", object.UUID).JSON(&object)
 	return object, err
@@ -89,36 +91,27 @@ func (v1 *V1Client) UpdatePhoto(object Photo) (Photo, error) {
 //
 // Parameters:
 //   uuid: string PhotoUUID as returned by the API
-func (v1 *V1Client) GetPhotoDownload(uuid string) (*File, error) {
-	if uuid == "" {
-		return nil, fmt.Errorf("missing uuid for GetPhotoDownload [GET /api/v1/photos/:uuid/dl]")
-	}
-	file := &File{}
-	return file, nil
+func (v1 *V1Client) GetPhotoDownload(uuid string) ([]byte, error) {
+	resp := v1.GET("/api/v1/photos/%s/dl?t=%s", uuid, v1.downloadToken)
+	return resp.Body, resp.Error
 }
 
 // GET /api/v1/photos/:uuid/yaml
 //
 // Parameters:
 //   uuid: string PhotoUUID as returned by the API
-func (v1 *V1Client) GetPhotoYaml(uuid string) (*Photo, error) {
-	if uuid == "" {
-		return nil, fmt.Errorf("missing uuid for GetPhotoYAML [GET /api/v1/photos/:uuid/yaml]")
-	}
-	photo := &Photo{}
-	return photo, nil
+func (v1 *V1Client) GetPhotoYaml(uuid string) ([]byte, error) {
+	resp := v1.GET("/api/v1/photos/%s/yaml", uuid)
+	return resp.Body, resp.Error
 }
 
 // POST /api/v1/photos/:uuid/approve
 //
 // Parameters:
 //   uuid: string PhotoUUID as returned by the API
-func (v1 *V1Client) ApprovePhoto(uuid string) (*Photo, error) {
-	if uuid == "" {
-		return nil, fmt.Errorf("missing uuid for ApprovePhoto [POST /api/v1/photos/:uuid/approve]")
-	}
-	photo := &Photo{}
-	return photo, nil
+func (v1 *V1Client) ApprovePhoto(uuid string) error {
+	resp := v1.POST(nil, "/api/v1/photos/%s/approve", uuid)
+	return resp.Error
 }
 
 // POST /api/v1/photos/:uid/like
@@ -126,10 +119,8 @@ func (v1 *V1Client) ApprovePhoto(uuid string) (*Photo, error) {
 // Parameters:
 //   uid: string PhotoUID as returned by the API
 func (v1 *V1Client) LikePhoto(uuid string) error {
-	if uuid == "" {
-		return fmt.Errorf("missing uuid for LikePhoto [POST /api/v1/photos/:uid/like]")
-	}
-	return nil
+	resp := v1.POST(nil, "/api/v1/photos/%s/like", uuid)
+	return resp.Error
 }
 
 // DELETE /api/v1/photos/:uuid/like
@@ -137,10 +128,8 @@ func (v1 *V1Client) LikePhoto(uuid string) error {
 // Parameters:
 //   uuid: string PhotoUUID as returned by the API
 func (v1 *V1Client) DislikePhoto(uuid string) error {
-	if uuid == "" {
-		return fmt.Errorf("missing uuid for DislikePhoto [DELETE /api/v1/photos/:uuid/like]")
-	}
-	return nil
+	resp := v1.DELETE(nil, "/api/v1/photos/%s/approve", uuid)
+	return resp.Error
 }
 
 // POST /api/v1/photos/:uid/files/:file_uid/primary
@@ -149,48 +138,6 @@ func (v1 *V1Client) DislikePhoto(uuid string) error {
 //   uid: string PhotoUID as returned by the API
 //   file_uid: string File UID as returned by the API
 func (v1 *V1Client) PhotoPrimary(uuid, fileuuid string) error {
-	if uuid == "" {
-		return fmt.Errorf("missing uuid for PhotoPrimary [POST /api/v1/photos/:uid/files/:file_uid/primary]")
-	}
-	if fileuuid == "" {
-		return fmt.Errorf("missing fileuuid for PhotoPrimary [POST /api/v1/photos/:uid/files/:file_uid/primary]")
-	}
-	return nil
+	resp := v1.POST(nil, "/api/v1/photos/%s/files/%s/primary", uuid, fileuuid)
+	return resp.Error
 }
-
-// -----
-// Dump from Chrome
-//
-//Request URL: http://localhost:8080/api/v1/photos/pqnzigq156lndozm
-//Request Method: PUT
-//Status Code: 200 OK
-//Remote Address: 127.0.0.1:8080
-//Referrer Policy: strict-origin-when-cross-origin
-
-// [RESPONSE HEADERS]
-//Content-Type: application/json; charset=utf-8
-//Date: Thu, 04 Feb 2021 04:27:16 GMT
-//Transfer-Encoding: chunked
-
-// [REQUEST HEADERS]
-//Accept: application/json, text/plain, */*
-//Accept-Encoding: gzip, deflate, br
-//Accept-Language: en-US,en;q=0.9
-//Connection: keep-alive
-//Content-Length: 41
-//Content-Type: application/json;charset=UTF-8
-//Host: localhost:8080
-//Origin: http://localhost:8080
-//Referer: http://localhost:8080/albums/aqnzih81icziiyae/february-2021
-//Sec-Fetch-Dest: empty
-//Sec-Fetch-Mode: cors
-//Sec-Fetch-Site: same-origin
-//User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36
-//X-Client-Hash: 2607a5a5
-//X-Client-Version: 210121-07e559df-Linux-x86_64
-//X-Session-ID: d92837cb1c41e37b9993d25e282efb3b337b6ae609a687d9
-
-// [REQUEST PAYLOAD]
-//{Title: "Test Nova", TitleSrc: "manual"}
-//Title: "Test Nova"
-//TitleSrc: "manual"

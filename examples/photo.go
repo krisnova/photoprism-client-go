@@ -1,30 +1,60 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"path"
 
 	photoprism "github.com/kris-nova/client-go"
 	"github.com/kris-nova/logger"
 )
 
 func main() {
+	// ---
+	// Log Level 4 (Most)
+	// Log Level 3
+	// Log Level 2
+	// Log Level 1
+	// Log Level 0 (Least)
+	//
 	logger.Level = 4
+	//
+	// ---
+
 	uuid := "pqnzigq351j2fqgn" // This is a known ID
 	client := photoprism.New("http://localhost:8080")
 	err := client.Auth(photoprism.NewClientAuthLogin("admin", "missy"))
 	if err != nil {
 		halt(4, "Error logging into API: %v", err)
 	}
-	//logger.Always("Login Success!")
+
+	// ---
+	// GetPhoto()
+	//
 	photo, err := client.V1().GetPhoto(uuid)
 	if err != nil {
 		halt(3, "Error fetching photo: %v", err)
 	}
 
-	bytes, err := json.Marshal(photo)
+	// ---
+	// UpdatePhoto()
+	photo.PhotoTitle = "A really great photo!"
+	photo, err = client.V1().UpdatePhoto(photo)
 	if err != nil {
-		halt(5, "Error: %v", err)
+		halt(2, "Error updating photo: %v", err)
 	}
-	fmt.Println(string(bytes))
+
+	// ---
+	// GetPhotoDownload()
+	file, err := client.V1().GetPhotoDownload(photo.UUID)
+	if err != nil {
+		halt(2, "Error getting photo download: %v", err)
+	}
+
+	for _, f := range photo.Files {
+		fileName := fmt.Sprintf("ignore_%s", path.Base(f.FileName))
+		logger.Always(fileName)
+		ioutil.WriteFile(fileName, file, 0666)
+	}
+
 }
