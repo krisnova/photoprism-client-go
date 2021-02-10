@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"path"
 	"testing"
 	"time"
 )
@@ -15,7 +16,7 @@ func TestHappyGetPhoto(t *testing.T) {
 }
 
 func TestSadGetPhoto(t *testing.T) {
-	photo, err := Client.V1().GetPhoto("1234567890")
+	photo, err := Client.V1().GetPhoto(UnknownPhotoID)
 	if err != nil {
 		t.Logf("success returning error for unknown photo: %v", err)
 		return
@@ -47,7 +48,7 @@ func TestSadUpdatePhoto(t *testing.T) {
 		t.FailNow()
 		return
 	}
-	photo.UUID = "1234567890"
+	photo.UUID = UnknownPhotoID
 	photo.PhotoDescription = fmt.Sprintf("Sample App Description: %s", time.Now().String())
 	photo, err = Client.V1().UpdatePhoto(photo)
 	if err != nil {
@@ -59,19 +60,28 @@ func TestSadUpdatePhoto(t *testing.T) {
 }
 
 func TestHappyGetPhotoDownload(t *testing.T) {
-	_, err := Client.V1().GetPhotoDownload(WellKnownPhotoID)
+	photo, err := Client.V1().GetPhoto(WellKnownPhotoID)
+	if err != nil {
+		t.Errorf("error getting well known photo: %v", err)
+		t.FailNow()
+		return
+	}
+	file, err := Client.V1().GetPhotoDownload(WellKnownPhotoID)
 	if err != nil {
 		t.Errorf("expected success getting well known photo: %v", err)
 		t.FailNow()
 	}
+	for _, f := range photo.Files {
+		fileName := path.Base(f.FileName)
+		t.Logf("Downloaded [%s]", fileName)
+		t.Logf("Photo Bytes: %d", len(file))
+	}
 }
 
 func TestSadGetPhotoDownload(t *testing.T) {
-	file, err := Client.V1().GetPhotoDownload("1234567890")
-	if err != nil {
-		t.Logf("success returning error for unknown photo: %v", err)
-		return
+	_, err := Client.V1().GetPhotoDownload(UnknownPhotoID)
+	if err == nil {
+		t.Errorf("expected failure getting well known photo: %v", err)
+		t.FailNow()
 	}
-	t.Errorf("expected error for unknown file: %s", file.FileName)
-	t.FailNow()
 }
