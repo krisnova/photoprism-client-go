@@ -65,3 +65,37 @@ func TestSadGetAlbums(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+// TestHappyCreateUpdateDeleteAlbum
+func TestHappyCreateUpdateDeleteAlbum(t *testing.T) {
+	album := api.Album{
+		AlbumTitle: WellKnownAlbumTitle,
+	}
+
+	newAlbum, err := Client.V1().CreateAlbum(album)
+	if err != nil {
+		t.Errorf("expected success creating album: %v", err)
+		t.FailNow()
+	}
+
+	newAlbum.AlbumDescription = "An updated album description"
+	newAlbum, err = Client.V1().UpdateAlbum(newAlbum)
+	if err != nil {
+		t.Errorf("unable to update test album: %v", err)
+		// Note: We do NOT FailNow() here because we want to clean up
+	}
+
+	err = Client.V1().DeleteAlbums([]string{newAlbum.AlbumUID})
+	if err != nil {
+		t.Errorf("expected delete album %s, album not deleted: %v", newAlbum.AlbumUID, err)
+		t.FailNow()
+	}
+
+}
+
+// LikeAlbum
+// DislikeAlbum
+// CloneAlbums
+// AddPhotosToAlbum
+// DeletePhotosFromAlbum
+// GetAlbumDownload

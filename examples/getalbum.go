@@ -1,8 +1,9 @@
 package main
 
 import (
+	"fmt"
+
 	photoprism "github.com/kris-nova/client-go"
-	"github.com/kris-nova/client-go/api/v1"
 	"github.com/kris-nova/logger"
 )
 
@@ -17,6 +18,7 @@ func main() {
 	logger.Level = 4
 	//
 	// ---
+	uuid := "aqnzih81icziiyae"
 
 	client := photoprism.New("http://localhost:8080")
 	err := client.Auth(photoprism.NewClientAuthLogin("admin", "missy"))
@@ -25,17 +27,18 @@ func main() {
 	}
 	logger.Always("Logged in...")
 
-	album := api.Album{
-		AlbumTitle: "NovaAlbum",
+	album, err := client.V1().GetAlbum(uuid)
+	if err != nil {
+		halt(3, "Error getting album %s", uuid)
+	}
+	fmt.Println(album)
+
+	albums, err := client.V1().GetAlbums(nil)
+	if err != nil {
+		halt(2, "Error listing albums: %v", err)
+	}
+	for _, album := range albums {
+		fmt.Println(album)
 	}
 
-	newAlbum, err := client.V1().CreateAlbum(album)
-	if err != nil {
-		halt(2, "Error creating album: %v", err)
-	}
-
-	err = client.V1().DeleteAlbums([]string{newAlbum.AlbumUID})
-	if err != nil {
-		halt(1, "Error deleting album: %v", err)
-	}
 }

@@ -22,6 +22,7 @@ const (
 	UnknownAlbumID                     = "1234567890"
 	WellKnownSampleAppConnectionString = "http://localhost:8080"
 	UnknownCategory                    = "Furries"
+	WellKnownAlbumTitle                = "TestAlbum"
 )
 
 // Client is a pre-authenticated client that can be used
