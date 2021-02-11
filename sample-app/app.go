@@ -23,7 +23,7 @@ var (
 	CreateCommand  = `pcreate`
 	DestroyCommand = `pdestroy`
 	LogsCommand    = `plogs`
-	StartCommand   = `pstart`
+	StartCommand   = `cd ../sample-app && bash -c "./pstart"`
 	StopCommand    = `pstop`
 )
 

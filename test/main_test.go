@@ -40,18 +40,19 @@ func TestMain(m *testing.M) {
 		///logger.Debug(err.Error())
 	}
 	err = app.Start()
-	defer func() {
-		//err := app.Stop()
-		//if err != nil {
-		//	logger.Critical("Failure stopping application: %v", err)
-		//	os.Exit(100)
-		//}
-		logger.Always("Success!")
-		os.Exit(0)
-	}()
-	if err != nil {
-		logger.Critical("Unable to start app: %v", err)
-		os.Exit(2)
+	if err == nil {
+		logger.Always("Stopping Photoprism Sample App for Unit Tests")
+		defer func() {
+			err := app.Stop()
+			if err != nil {
+				logger.Critical("Failure stopping application: %v", err)
+				os.Exit(100)
+			}
+			logger.Always("Success!")
+			os.Exit(0)
+		}()
+	}else {
+		logger.Always("Photoprism already running...")
 	}
 
 	// --- [ Client ] ---
