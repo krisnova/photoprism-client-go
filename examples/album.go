@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	photoprism "github.com/kris-nova/client-go"
 	"github.com/kris-nova/logger"
 )
@@ -27,6 +28,17 @@ func main() {
 	logger.Always("Logged in...")
 
 	album, err := client.V1().GetAlbum(uuid)
+	if err != nil {
+		halt(3, "Error getting album %s", uuid)
+	}
 	fmt.Println(album)
+
+	albums, err := client.V1().GetAlbums(nil)
+	if err != nil {
+		halt(2, "Error listing albums: %v", err)
+	}
+	for _, album := range albums {
+		fmt.Println(album)
+	}
 
 }

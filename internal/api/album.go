@@ -40,7 +40,7 @@ func SaveAlbumAsYaml(a entity.Album) {
 	}
 }
 
-// GET /api/v1/albums/:uuid
+// GET /api/v1/albums
 func GetAlbums(router *gin.RouterGroup) {
 	router.GET("/albums", func(c *gin.Context) {
 		s := Auth(SessionID(c), acl.ResourceAlbums, acl.ActionSearch)
