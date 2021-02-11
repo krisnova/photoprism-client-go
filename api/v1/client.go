@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/kris-nova/logger"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -40,6 +41,17 @@ type V1Response struct {
 	Body         []byte
 }
 
+// String is used to represent the body of the response as a string.
+func (r *V1Response) String() string {
+	if r.Error != nil {
+		// Handle errors from the HTTP request first
+		logger.Warning("during HTTP request: %v", r.Error)
+		return "{}"
+	}
+	return string(r.Body)
+}
+
+// JSON will unmarshal onto whatever interface is passed in.
 func (r *V1Response) JSON(i interface{}) error {
 	if r.Error != nil {
 		// Handle errors from the HTTP request first

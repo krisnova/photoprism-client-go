@@ -18,6 +18,8 @@ const (
 	BadPassword                        = "charlie"
 	WellKnownPhotoID                   = "pqnzigq351j2fqgn" // This is a photo in the persistent sample app
 	UnknownPhotoID                     = "1234567890"
+	WellKnownAlbumID                   = "aqnzih81icziiyae"
+	UnknownAlbumID                     = "1234567890"
 	WellKnownSampleAppConnectionString = "http://localhost:8080"
 )
 
@@ -51,7 +53,7 @@ func TestMain(m *testing.M) {
 			logger.Always("Success!")
 			os.Exit(0)
 		}()
-	}else {
+	} else {
 		logger.Always("Photoprism already running...")
 	}
 

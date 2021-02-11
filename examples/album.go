@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	photoprism "github.com/kris-nova/client-go"
 	"github.com/kris-nova/logger"
 )
@@ -16,6 +17,7 @@ func main() {
 	logger.Level = 4
 	//
 	// ---
+	uuid := "aqnzih81icziiyae"
 
 	client := photoprism.New("http://localhost:8080")
 	err := client.Auth(photoprism.NewClientAuthLogin("admin", "missy"))
@@ -24,6 +26,7 @@ func main() {
 	}
 	logger.Always("Logged in...")
 
-
+	album, err := client.V1().GetAlbum(uuid)
+	fmt.Println(album)
 
 }
