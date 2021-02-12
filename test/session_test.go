@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	photoprism "github.com/kris-nova/client-go"
+	photoprism "github.com/kris-nova/photoprism-client-go"
 )
 
 // TestHappyLogin should succeed with the good password "missy"

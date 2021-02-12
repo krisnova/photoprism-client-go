@@ -6,7 +6,7 @@ import (
 
 	"github.com/kris-nova/logger"
 
-	photoprism "github.com/kris-nova/client-go"
+	"github.com/kris-nova/photoprism-client-go"
 )
 
 type SampleApplication struct {
@@ -23,8 +23,8 @@ var (
 	CreateCommand  = `pcreate`
 	DestroyCommand = `pdestroy`
 	LogsCommand    = `plogs`
-	StartCommand   = `cd ../sample-app && bash -c "./pstart"`
-	StopCommand    = `pstop`
+	StartCommand   = `pstart`
+	StopCommand    = `pstop"`
 )
 
 func (a *SampleApplication) Start() error {

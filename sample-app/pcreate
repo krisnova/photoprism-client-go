@@ -17,9 +17,9 @@ docker run -d \
     -p 8080:2342 \
     -e PHOTOPRISM_UPLOAD_NSFW="true" \
     -e PHOTOPRISM_ADMIN_PASSWORD="missy" \
-    -v ${GOPATH}/src/github.com/kris-nova/client-go/sample-app/photoprism/import:/photoprism/import \
-    -v ${GOPATH}/src/github.com/kris-nova/client-go/sample-app/photoprism/originals:/photoprism/originals \
-    -v ${GOPATH}/src/github.com/kris-nova/client-go/sample-app/photoprism/storage:/photoprism/storage \
+    -v ${GOPATH}/src/github.com/kris-nova/photoprism-client-go/sample-app/photoprism/import:/photoprism/import \
+    -v ${GOPATH}/src/github.com/kris-nova/photoprism-client-go/sample-app/photoprism/originals:/photoprism/originals \
+    -v ${GOPATH}/src/github.com/kris-nova/photoprism-client-go/sample-app/photoprism/storage:/photoprism/storage \
     photoprism/photoprism:latest
 
 

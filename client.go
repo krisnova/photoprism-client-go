@@ -9,7 +9,7 @@ import (
 	"net/url"
 	"strings"
 
-	v1 "github.com/kris-nova/client-go/api/v1"
+	v1 "github.com/kris-nova/photoprism-client-go/api/v1"
 )
 
 const (

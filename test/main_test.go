@@ -5,11 +5,11 @@ import (
 	"strings"
 	"testing"
 
-	photoprism "github.com/kris-nova/client-go"
+	photoprism "github.com/kris-nova/photoprism-client-go"
 
 	"github.com/kris-nova/logger"
 
-	sampleapp "github.com/kris-nova/client-go/sample-app"
+	sampleapp "github.com/kris-nova/photoprism-client-go/sample-app"
 )
 
 const (

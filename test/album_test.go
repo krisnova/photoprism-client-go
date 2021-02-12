@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	"github.com/kris-nova/client-go/api/v1"
+	"github.com/kris-nova/photoprism-client-go/api/v1"
 )
 
 func TestHappyGetAlbum(t *testing.T) {

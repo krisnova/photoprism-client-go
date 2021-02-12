@@ -59,7 +59,7 @@ import (
 	"io/ioutil"
 	"path"
 
-	photoprism "github.com/kris-nova/client-go"
+	photoprism "github.com/kris-nova/photoprism-client-go"
 	"github.com/kris-nova/logger"
 )
 

@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	photoprism "github.com/kris-nova/client-go"
 	"github.com/kris-nova/logger"
+	photoprism "github.com/kris-nova/photoprism-client-go"
 )
 
 func main() {
