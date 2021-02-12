@@ -17,6 +17,7 @@ const (
 	DefaultContentType string = "application/json; charset=utf-8"
 )
 
+// V1Client is used to access the V1 Photoprism API.
 type V1Client struct {
 	downloadToken string
 	token         string
@@ -25,7 +26,7 @@ type V1Client struct {
 }
 
 // New will only accept a url.URL so that we know
-// all errors have been handled up until this point
+// all errors have been handled up until this point.
 func New(connURL *url.URL, token, downloadToken string) *V1Client {
 	return &V1Client{
 		client:        http.Client{},
@@ -35,6 +36,8 @@ func New(connURL *url.URL, token, downloadToken string) *V1Client {
 	}
 }
 
+// V1Response is the master HTTP Response object
+// for all transactions with the Photoprism API.
 type V1Response struct {
 	HTTPResponse *http.Response
 	StatusCode   int

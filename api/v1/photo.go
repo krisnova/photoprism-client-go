@@ -1,17 +1,22 @@
 package api
 
-// GET /api/v1/photos/:uuid
+// GetPhoto can be used to get a photo by UUID
+//
+//GET /api/v1/photos/:uuid
 //
 // Parameters:
 //   uuid: string PhotoUID as returned by the API
 func (v1 *V1Client) GetPhoto(uuid string) (Photo, error) {
-	object := Photo{
+	photo := Photo{
 		UUID: uuid,
 	}
-	err := v1.GET("/api/v1/photos/%s", uuid).JSON(&object)
-	return object, err
+	err := v1.GET("/api/v1/photos/%s", uuid).JSON(&photo)
+	return photo, err
 }
 
+// PhotoOptions is used while listing photos. These
+// fields can be optionally set to query for specific
+// photos.
 type PhotoOptions struct {
 	Count    int
 	Offset   int
@@ -62,9 +67,9 @@ func (v1 *V1Client) GetPhotos(options *PhotoOptions) ([]Photo, error) {
 //
 // Parameters:
 //   uuid: string PhotoUUID as returned by the API
-func (v1 *V1Client) UpdatePhoto(object Photo) (Photo, error) {
-	err := v1.PUT(&object, "/api/v1/photos/%s", object.UUID).JSON(&object)
-	return object, err
+func (v1 *V1Client) UpdatePhoto(photo Photo) (Photo, error) {
+	err := v1.PUT(&photo, "/api/v1/photos/%s", photo.UUID).JSON(&photo)
+	return photo, err
 }
 
 // GET /api/v1/photos/:uuid/dl

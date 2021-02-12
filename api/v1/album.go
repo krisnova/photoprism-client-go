@@ -2,6 +2,9 @@ package api
 
 import "fmt"
 
+// AlbumOptions are the parameters passed to get
+// albums by various fields. Populate these as needed
+// to pass to the SDK
 type AlbumOptions struct {
 	ParamType string
 	Q         string
@@ -18,6 +21,8 @@ const (
 	DefaultAlbumOptionsCategory  = ""
 )
 
+// GetAlbums is used to list albums by query fields.
+//
 // GET /api/v1/albums
 //
 // Example Params: http://localhost:8080/api/v1/albums?count=24&offset=0&q=&category=&type=album
@@ -28,11 +33,11 @@ func (v1 *V1Client) GetAlbums(options *AlbumOptions) ([]Album, error) {
 
 		// Default to sane options for query
 		options = &AlbumOptions{
-			ParamType: "album",
-			Q:         "",
-			Count:     24,
-			Offset:    0,
-			Category:  "",
+			ParamType: DefaultAlbumOptionsParamType,
+			Q:         DefaultAlbumOptionsQ,
+			Count:     DefaultAlbumOptionsCount,
+			Offset:    DefaultAlbumOptionsOffset,
+			Category:  DefaultAlbumOptionsCategory,
 		}
 	}
 
@@ -50,6 +55,8 @@ func (v1 *V1Client) GetAlbums(options *AlbumOptions) ([]Album, error) {
 	return albums, err
 }
 
+// GetAlbum is used to get an album by an UUID.
+//
 // GET /api/v1/albums/:uuid
 func (v1 *V1Client) GetAlbum(uuid string) (Album, error) {
 	album := Album{}
@@ -66,32 +73,38 @@ func (v1 *V1Client) GetAlbum(uuid string) (Album, error) {
 // such that an empty Album{} object will still
 // create a new album.
 //
-//POST /api/v1/albums
-func (v1 *V1Client) CreateAlbum(object Album) (Album, error) {
-	err := v1.POST(&object, "/api/v1/albums").JSON(&object)
-	return object, err
+// POST /api/v1/albums
+func (v1 *V1Client) CreateAlbum(album Album) (Album, error) {
+	err := v1.POST(&album, "/api/v1/albums").JSON(&album)
+	return album, err
 }
 
+// UpdateAlbum will update meta information about an album.
+//
 // PUT /api/v1/albums/:uid
-func (v1 *V1Client) UpdateAlbum(object Album) (Album, error) {
-	if object.AlbumUID == "" {
-		return object, fmt.Errorf("missing album.AlbumUID in album")
+func (v1 *V1Client) UpdateAlbum(album Album) (Album, error) {
+	if album.AlbumUID == "" {
+		return album, fmt.Errorf("missing album.AlbumUID in album")
 	}
-	err := v1.PUT(&object, "/api/v1/albums/%s", object.AlbumUID).JSON(&object)
-	return object, err
+	err := v1.PUT(&album, "/api/v1/albums/%s", album.AlbumUID).JSON(&album)
+	return album, err
 }
 
+// DeleteAlbums will batch delete a set of albums by ID.
+//
 // POST /api/v1/batch/albums/delete
-func (v1 *V1Client) DeleteAlbums(uuids []string) error {
+func (v1 *V1Client) DeleteAlbums(albumUUIDs []string) error {
 	payload := struct {
 		Albums []string `json:"albums"`
 	}{
-		Albums: uuids,
+		Albums: albumUUIDs,
 	}
 	resp := v1.POST(payload, "/api/v1/batch/albums/delete")
 	return resp.Error
 }
 
+// LikeAlbum can be used to like an album.
+//
 // POST /api/v1/albums/:uid/like
 //
 // Parameters:
@@ -101,6 +114,8 @@ func (v1 *V1Client) LikeAlbum(uuid string) error {
 	return resp.Error
 }
 
+// DislikeAlbum can be used to dislike an album.
+//
 // DELETE /api/v1/albums/:uid/like
 //
 // Parameters:
@@ -110,16 +125,21 @@ func (v1 *V1Client) DislikeAlbum(uuid string) error {
 	return resp.Error
 }
 
+// CloneAlbum can be used to clone an album and will
+// return the newly cloned album on success.
+//
 // POST /api/v1/albums/:uid/clone
-func (v1 *V1Client) CloneAlbum(object Album) (Album, error) {
-	if object.AlbumUID == "" {
-		return object, fmt.Errorf("missing album.AlbumUID in album")
+func (v1 *V1Client) CloneAlbum(album Album) (Album, error) {
+	if album.AlbumUID == "" {
+		return album, fmt.Errorf("missing album.AlbumUID in album")
 	}
 	newAlbum := Album{}
-	err := v1.POST(&object, "/api/v1/albums/%s/clone", object.AlbumUID).JSON(&newAlbum)
+	err := v1.POST(&album, "/api/v1/albums/%s/clone", album.AlbumUID).JSON(&newAlbum)
 	return newAlbum, err
 }
 
+// AddPhotosToAlbum will associate a set of photos by UUID with an album by UUID
+//
 // POST /api/v1/albums/:uid/photos
 func (v1 *V1Client) AddPhotosToAlbum(albumUUID string, photoIDs []string) error {
 	payload := struct {
@@ -131,6 +151,8 @@ func (v1 *V1Client) AddPhotosToAlbum(albumUUID string, photoIDs []string) error 
 	return resp.Error
 }
 
+// DeletePhotosFromAlbum will disassociate a set of photos by UUID from an album by UUID
+//
 // DELETE /api/v1/albums/:uid/photos
 func (v1 *V1Client) DeletePhotosFromAlbum(albumUUID string, photoIDs []string) error {
 	payload := struct {
@@ -142,6 +164,9 @@ func (v1 *V1Client) DeletePhotosFromAlbum(albumUUID string, photoIDs []string) e
 	return resp.Error
 }
 
+// GetAlbumDownload will return a .zip file of the album's content
+// and can be used to download an album from the API.
+//
 // GET /api/v1/albums/:uid/dl
 func (v1 *V1Client) GetAlbumDownload(uuid string) ([]byte, error) {
 	// NOTE: Even though this method is singular GetAlbum
