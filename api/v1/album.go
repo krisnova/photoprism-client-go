@@ -111,7 +111,7 @@ func (v1 *V1Client) DislikeAlbum(uuid string) error {
 }
 
 // POST /api/v1/albums/:uid/clone
-func (v1 *V1Client) CloneAlbums(object Album) (Album, error) {
+func (v1 *V1Client) CloneAlbum(object Album) (Album, error) {
 	if object.AlbumUID == "" {
 		return object, fmt.Errorf("missing album.AlbumUID in album")
 	}
@@ -121,14 +121,24 @@ func (v1 *V1Client) CloneAlbums(object Album) (Album, error) {
 }
 
 // POST /api/v1/albums/:uid/photos
-func (v1 *V1Client) AddPhotosToAlbum(albumUUID string, objects []Photo) error {
-	resp := v1.POST(&objects, "/api/v1/albums/%s/photos", albumUUID)
+func (v1 *V1Client) AddPhotosToAlbum(albumUUID string, photoIDs []string) error {
+	payload := struct {
+		Photos []string `json:"photos"`
+	}{
+		Photos: photoIDs,
+	}
+	resp := v1.POST(&payload, "/api/v1/albums/%s/photos", albumUUID)
 	return resp.Error
 }
 
 // DELETE /api/v1/albums/:uid/photos
-func (v1 *V1Client) DeletePhotosFromAlbum(albumUUID string, objects []Photo) error {
-	resp := v1.DELETE(&objects, "/api/v1/albums/%s/photos", albumUUID)
+func (v1 *V1Client) DeletePhotosFromAlbum(albumUUID string, photoIDs []string) error {
+	payload := struct {
+		Photos []string `json:"photos"`
+	}{
+		Photos: photoIDs,
+	}
+	resp := v1.DELETE(&payload, "/api/v1/albums/%s/photos", albumUUID)
 	return resp.Error
 }
 

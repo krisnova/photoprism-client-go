@@ -1,0 +1,11 @@
+UID: aqoe4m9204aigugh
+Slug: testalbum
+Type: album
+Title: TestAlbum
+Order: oldest
+Country: zz
+CreatedAt: 2021-02-12T00:42:10Z
+UpdatedAt: 2021-02-12T00:42:10Z
+Photos:
+- UID: pqnzigq351j2fqgn
+  CreatedAt: 2021-02-12T00:42:09.791065836Z

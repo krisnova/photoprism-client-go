@@ -5,7 +5,22 @@ import (
 	"path"
 	"testing"
 	"time"
+
+	"github.com/kris-nova/client-go/api/v1"
 )
+
+//TODO Test GetPhotos()
+
+func TestHappyGetPhotos(t *testing.T) {
+	_, err := Client.V1().GetPhotos(&api.PhotoOptions{
+		Count:    1,
+		AlbumUID: WellKnownAlbumID,
+	})
+	if err != nil {
+		t.Errorf("expected success getting well known photo: %v", err)
+		t.FailNow()
+	}
+}
 
 func TestHappyGetPhoto(t *testing.T) {
 	_, err := Client.V1().GetPhoto(WellKnownPhotoID)

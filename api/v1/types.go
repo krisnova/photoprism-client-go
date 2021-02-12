@@ -5,10 +5,12 @@ import (
 	"time"
 )
 
+type Photos []Photo
+
 // Photo represents a photo, all its properties, and link to all its images and sidecar files.
 type Photo struct {
 	Meta
-	ID               uint      `gorm:"primary_key" yaml:"-"`
+	//ID               uint      `gorm:"primary_key" yaml:"-"`
 	UUID             string    `gorm:"type:VARBINARY(42);index;" json:"DocumentID,omitempty" yaml:"DocumentID,omitempty"`
 	TakenAt          time.Time `gorm:"type:datetime;index:idx_photos_taken_uid;" json:"TakenAt" yaml:"TakenAt"`
 	TakenAtLocal     time.Time `gorm:"type:datetime;" yaml:"-"`
@@ -52,13 +54,13 @@ type Photo struct {
 	CameraSrc        string    `gorm:"type:VARBINARY(8);" json:"CameraSrc" yaml:"-"`
 	LensID           uint      `gorm:"index:idx_photos_camera_lens;default:1" json:"LensID" yaml:"-"`
 	Details          *Details  `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Details" yaml:"Details"`
-	Camera           *Camera      `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Camera" yaml:"-"`
-	Lens             *Lens        `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Lens" yaml:"-"`
-	Cell             *Cell        `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Cell" yaml:"-"`
-	Place            *Place       `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Place" yaml:"-"`
-	Keywords         []Keyword    `json:"-" yaml:"-"`
-	Albums           []Album      `json:"-" yaml:"-"`
-	Files []File `yaml:"-"`
+	Camera           *Camera   `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Camera" yaml:"-"`
+	Lens             *Lens     `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Lens" yaml:"-"`
+	Cell             *Cell     `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Cell" yaml:"-"`
+	Place            *Place    `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Place" yaml:"-"`
+	Keywords         []Keyword `json:"-" yaml:"-"`
+	Albums           []Album   `json:"-" yaml:"-"`
+	Files            []File    `yaml:"-"`
 	//Labels           []PhotoLabel `yaml:"-"`
 	CreatedAt time.Time  `yaml:"CreatedAt,omitempty"`
 	UpdatedAt time.Time  `yaml:"UpdatedAt,omitempty"`
@@ -193,7 +195,6 @@ type PhotoAlbum struct {
 	Album     *Album    `gorm:"PRELOAD:true" yaml:"-"`
 }
 
-
 // File represents an image or sidecar file that belongs to a photo.
 type File struct {
 	ID              uint          `gorm:"primary_key" json:"-" yaml:"-"`
@@ -266,7 +267,6 @@ type FileShare struct {
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }
-
 
 // PhotoLabel represents the many-to-many relation between Photo and label.
 // Labels are weighted by uncertainty (100 - confidence)
