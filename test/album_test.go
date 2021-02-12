@@ -179,74 +179,91 @@ func TestSadCloneAlbum(t *testing.T) {
 
 // TestAlbumAddDeletePhoto is a giant integration test
 // that will exercise many methods in the SDK
-//func TestAlbumAddDeletePhoto(t *testing.T) {
-//	album := api.Album{
-//		AlbumTitle: WellKnownAlbumTitle,
-//	}
 //
-//	newAlbum, err := Client.V1().CreateAlbum(album)
-//	if err != nil {
-//		t.Errorf("expected success creating album: %v", err)
-//		t.FailNow()
-//	}
-//
-//	// Add Photos
-//	photos := []string{
-//		WellKnownPhotoID,
-//	}
-//	err = Client.V1().AddPhotosToAlbum(newAlbum.AlbumUID, photos)
-//	if err != nil {
-//		t.Errorf("expected to add photos to album: %v", err)
-//		// Note: We do NOT FailNow() here because we want to clean up
-//	}
-//
-//	// Get the photos by album
-//	updatedPhotos, err := Client.V1().GetPhotos(&api.PhotoOptions{
-//		Count:    100,
-//		AlbumUID: newAlbum.AlbumUID,
-//	})
-//	if err != nil {
-//		t.Errorf("expecting to list photos by album: %v", err)
-//		// Note: We do NOT FailNow() here because we want to clean up
-//	}
-//
-//	var updatedPhotoIDs []string
-//	for _, photo := range updatedPhotos {
-//		updatedPhotoIDs = append(updatedPhotoIDs, photo.PhotoUID)
-//	}
-//	if len(updatedPhotos) != 1 {
-//		t.Errorf("expecting 1 well known photo in album, found: %d", len(updatedPhotos))
-//	}
-//
-//	err = Client.V1().DeletePhotosFromAlbum(newAlbum.AlbumUID, updatedPhotoIDs)
-//	if err != nil {
-//		t.Errorf("expected to delete newly created photos from album: %v", err)
-//		// Note: We do NOT FailNow() here because we want to clean up
-//	}
-//
-//	// Get the photos by album
-//	updatedPhotos, err = Client.V1().GetPhotos(&api.PhotoOptions{
-//		Count:    100,
-//		AlbumUID: newAlbum.AlbumUID,
-//	})
-//	if err != nil {
-//		t.Errorf("expecting to list photos by album: %v", err)
-//		// Note: We do NOT FailNow() here because we want to clean up
-//	}
-//
-//	if len(updatedPhotos) != 0 {
-//		t.Errorf("expected empty album, found %d photos", len(updatedPhotos))
-//		// Note: We do NOT FailNow() here because we want to clean up
-//	}
-//
-//	err = Client.V1().DeleteAlbums([]string{newAlbum.AlbumUID})
-//	if err != nil {
-//		t.Errorf("expected delete album %s, album not deleted: %v", newAlbum.AlbumUID, err)
-//		t.FailNow()
-//	}
-//}
+// This is the most complete integration test in the suite
+// and is the test that will also exercise adding and deleting
+// photos from an album
+func TestAlbumAddDeletePhoto(t *testing.T) {
+	album := api.Album{
+		AlbumTitle: WellKnownAlbumTitle,
+	}
 
-// AddPhotosToAlbum
-// DeletePhotosFromAlbum
+	newAlbum, err := Client.V1().CreateAlbum(album)
+	if err != nil {
+		t.Errorf("expected success creating album: %v", err)
+		t.FailNow()
+	}
 
-// GetAlbumDownload
+	// Add Photos
+	photos := []string{
+		WellKnownPhotoID,
+	}
+	err = Client.V1().AddPhotosToAlbum(newAlbum.AlbumUID, photos)
+	if err != nil {
+		t.Errorf("expected to add photos to album: %v", err)
+		// Note: We do NOT FailNow() here because we want to clean up
+	}
+
+	// Get the photos by album
+	updatedPhotos, err := Client.V1().GetPhotos(&api.PhotoOptions{
+		Count:    100,
+		AlbumUID: newAlbum.AlbumUID,
+	})
+	if err != nil {
+		t.Errorf("expecting to list photos by album: %v", err)
+		// Note: We do NOT FailNow() here because we want to clean up
+	}
+
+	var updatedPhotoIDs []string
+	for _, photo := range updatedPhotos {
+		updatedPhotoIDs = append(updatedPhotoIDs, photo.PhotoUID)
+	}
+	if len(updatedPhotos) != 1 {
+		t.Errorf("expecting 1 well known photo in album, found: %d", len(updatedPhotos))
+	}
+
+	err = Client.V1().DeletePhotosFromAlbum(newAlbum.AlbumUID, updatedPhotoIDs)
+	if err != nil {
+		t.Errorf("expected to delete newly created photos from album: %v", err)
+		// Note: We do NOT FailNow() here because we want to clean up
+	}
+
+	// Get the photos by album
+	updatedPhotos, err = Client.V1().GetPhotos(&api.PhotoOptions{
+		Count:    100,
+		AlbumUID: newAlbum.AlbumUID,
+	})
+	if err != nil {
+		t.Errorf("expecting to list photos by album: %v", err)
+		// Note: We do NOT FailNow() here because we want to clean up
+	}
+
+	if len(updatedPhotos) != 0 {
+		t.Errorf("expected empty album, found %d photos", len(updatedPhotos))
+		// Note: We do NOT FailNow() here because we want to clean up
+	}
+
+	err = Client.V1().DeleteAlbums([]string{newAlbum.AlbumUID})
+	if err != nil {
+		t.Errorf("expected delete album %s, album not deleted: %v", newAlbum.AlbumUID, err)
+		t.FailNow()
+	}
+}
+
+func TestHappyGetAlbumDownload(t *testing.T) {
+	// GetAlbumDownload should return a .zip file
+	bytes, err := Client.V1().GetAlbumDownload(WellKnownAlbumID)
+	if err != nil {
+		t.Errorf("expecting album download: %v", err)
+		t.FailNow()
+	}
+	t.Logf("bytes of .zip file downloaded: %db", len(bytes))
+}
+
+func TestSadGetAlbumDownload(t *testing.T) {
+	_, err := Client.V1().GetPhotoDownload(UnknownAlbumID)
+	if err == nil {
+		t.Errorf("expected failure getting well known album: %v", err)
+		t.FailNow()
+	}
+}
