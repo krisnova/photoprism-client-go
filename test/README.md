@@ -12,7 +12,7 @@ To add a test please try to have both `Happy` and `Sad` tests defined for all ne
 
 Example test:
 
-#####mymethod_test.go
+##### mymethod_test.go
 
 ```go
  
@@ -27,7 +27,7 @@ func TestHappyMethod(t *testing.T) {
 }
 
 // TestSadMethod will false positive test my new method
-func TestHappyMethod(t *testing.T) {
+func TestSadMethod(t *testing.T) {
     params := "my bad input"
     _, err := Client.V1().Method(params)
     if err == nil {
