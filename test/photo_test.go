@@ -63,7 +63,7 @@ func TestSadUpdatePhoto(t *testing.T) {
 		t.FailNow()
 		return
 	}
-	photo.UUID = UnknownPhotoID
+	photo.PhotoUID = UnknownPhotoID
 	photo.PhotoDescription = fmt.Sprintf("Sample App Description: %s", time.Now().String())
 	photo, err = Client.V1().UpdatePhoto(photo)
 	if err != nil {

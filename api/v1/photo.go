@@ -8,7 +8,8 @@ package api
 //   uuid: string PhotoUID as returned by the API
 func (v1 *V1Client) GetPhoto(uuid string) (Photo, error) {
 	photo := Photo{
-		UUID: uuid,
+		UUID:     uuid,
+		PhotoUID: uuid,
 	}
 	err := v1.GET("/api/v1/photos/%s", uuid).JSON(&photo)
 	return photo, err
@@ -68,7 +69,7 @@ func (v1 *V1Client) GetPhotos(options *PhotoOptions) ([]Photo, error) {
 // Parameters:
 //   uuid: string PhotoUUID as returned by the API
 func (v1 *V1Client) UpdatePhoto(photo Photo) (Photo, error) {
-	err := v1.PUT(&photo, "/api/v1/photos/%s", photo.UUID).JSON(&photo)
+	err := v1.PUT(&photo, "/api/v1/photos/%s", photo.PhotoUID).JSON(&photo)
 	return photo, err
 }
 

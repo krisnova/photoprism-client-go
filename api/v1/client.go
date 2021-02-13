@@ -8,8 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-
-	"github.com/kris-nova/logger"
 )
 
 const (
@@ -49,8 +47,7 @@ type V1Response struct {
 func (r *V1Response) String() string {
 	if r.Error != nil {
 		// Handle errors from the HTTP request first
-		logger.Warning("during HTTP request: %v", r.Error)
-		return "{}"
+		return fmt.Sprintf(`{\n"StatusCode":%d,\n"Body":"%s"}`, r.StatusCode, string(r.Body))
 	}
 	return string(r.Body)
 }
