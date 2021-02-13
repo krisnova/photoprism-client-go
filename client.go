@@ -23,11 +23,19 @@ const (
 // New is used to create a new Client to authenticate with
 // Photoprism.
 func New(connectionString string) *Client {
+	for strings.HasSuffix(connectionString, "/") {
+		connectionString = connectionString[:len(connectionString)-1]
+	}
+
 	c := &Client{
 		contentType:      APIContentType,
 		connectionString: connectionString,
 	}
 	return c
+}
+
+func (c *Client) ConnectionString() string {
+	return c.connectionString
 }
 
 // Client represents a client to a Photoprism application
