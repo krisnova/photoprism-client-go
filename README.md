@@ -38,6 +38,7 @@ func (v1 *V1Client) GetPhotoDownload(uuid string) ([]byte, error)
 func (v1 *V1Client) GetPhotos(options *PhotoOptions) ([]Photo, error)
 func (v1 *V1Client) GetPhoto(uuid string) (Photo, error)
 func (v1 *V1Client) GetPhotoYaml(uuid string) ([]byte, error)
+func (v1 *V1Client) Import() error
 func (v1 *V1Client) Index() error
 func (v1 *V1Client) LikeAlbum(uuid string) error
 func (v1 *V1Client) LikePhoto(uuid string) error
