@@ -1,4 +1,4 @@
-module github.com/kris-nova/photoprism-client-go
+module github.com/ggeremy/photoprism-client-go
 
 go 1.15
 
