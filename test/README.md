@@ -1,6 +1,6 @@
 # Local Integration Tests
 
-To run the tests.
+To run the tests. (trying to add sudo to command line)
 
 ```bash
 sudo -E go test . -v
