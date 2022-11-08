@@ -186,6 +186,6 @@ func (v1 *V1Client) DeletePhotosFromAlbum(albumUUID string, photoIDs []string) e
 func (v1 *V1Client) GetAlbumDownload(uuid string) ([]byte, error) {
 	// NOTE: Even though this method is singular GetAlbum
 	// if will call the "albums" plural endpoint.
-	resp := v1.GET("/api/v1/albums/%s?t=%s", uuid, v1.downloadToken)
+	resp := v1.GET("/api/v1/albums/%s/dl", uuid)
 	return resp.Body, resp.Error
 }
