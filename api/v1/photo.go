@@ -1,24 +1,25 @@
-//  Copyright © 2021 Kris Nóva <kris@nivenly.com>
+// Copyright © 2021 Kris Nóva <kris@nivenly.com>
 //
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package api
 
 // GetPhoto can be used to get a photo by UUID
 //
-//GET /api/v1/photos/:uuid
+// GET /api/v1/photos/:uuid
 //
 // Parameters:
-//   uuid: string PhotoUID as returned by the API
+//
+//	uuid: string PhotoUID as returned by the API
 func (v1 *V1Client) GetPhoto(uuid string) (Photo, error) {
 	photo := Photo{
 		UUID:     uuid,
@@ -80,7 +81,8 @@ func (v1 *V1Client) GetPhotos(options *PhotoOptions) ([]Photo, error) {
 // PUT /api/v1/photos/:uid
 //
 // Parameters:
-//   uuid: string PhotoUUID as returned by the API
+//
+//	uuid: string PhotoUUID as returned by the API
 func (v1 *V1Client) UpdatePhoto(photo Photo) (Photo, error) {
 	err := v1.PUT(&photo, "/api/v1/photos/%s", photo.PhotoUID).JSON(&photo)
 	return photo, err
@@ -89,7 +91,8 @@ func (v1 *V1Client) UpdatePhoto(photo Photo) (Photo, error) {
 // GET /api/v1/photos/:uuid/dl
 //
 // Parameters:
-//   uuid: string PhotoUUID as returned by the API
+//
+//	uuid: string PhotoUUID as returned by the API
 func (v1 *V1Client) GetPhotoDownload(uuid string) ([]byte, error) {
 	resp := v1.GET("/api/v1/photos/%s/dl?t=%s", uuid, v1.downloadToken)
 	return resp.Body, resp.Error
@@ -98,7 +101,8 @@ func (v1 *V1Client) GetPhotoDownload(uuid string) ([]byte, error) {
 // GET /api/v1/photos/:uuid/yaml
 //
 // Parameters:
-//   uuid: string PhotoUUID as returned by the API
+//
+//	uuid: string PhotoUUID as returned by the API
 func (v1 *V1Client) GetPhotoYaml(uuid string) ([]byte, error) {
 	resp := v1.GET("/api/v1/photos/%s/yaml", uuid)
 	return resp.Body, resp.Error
@@ -107,7 +111,8 @@ func (v1 *V1Client) GetPhotoYaml(uuid string) ([]byte, error) {
 // POST /api/v1/photos/:uuid/approve
 //
 // Parameters:
-//   uuid: string PhotoUUID as returned by the API
+//
+//	uuid: string PhotoUUID as returned by the API
 func (v1 *V1Client) ApprovePhoto(uuid string) error {
 	resp := v1.POST(nil, "/api/v1/photos/%s/approve", uuid)
 	return resp.Error
@@ -116,7 +121,8 @@ func (v1 *V1Client) ApprovePhoto(uuid string) error {
 // POST /api/v1/photos/:uid/like
 //
 // Parameters:
-//   uid: string PhotoUID as returned by the API
+//
+//	uid: string PhotoUID as returned by the API
 func (v1 *V1Client) LikePhoto(uuid string) error {
 	resp := v1.POST(nil, "/api/v1/photos/%s/like", uuid)
 	return resp.Error
@@ -125,7 +131,8 @@ func (v1 *V1Client) LikePhoto(uuid string) error {
 // DELETE /api/v1/photos/:uuid/like
 //
 // Parameters:
-//   uuid: string PhotoUUID as returned by the API
+//
+//	uuid: string PhotoUUID as returned by the API
 func (v1 *V1Client) DislikePhoto(uuid string) error {
 	resp := v1.DELETE(nil, "/api/v1/photos/%s/approve", uuid)
 	return resp.Error
@@ -134,8 +141,9 @@ func (v1 *V1Client) DislikePhoto(uuid string) error {
 // POST /api/v1/photos/:uid/files/:file_uid/primary
 //
 // Parameters:
-//   uid: string PhotoUID as returned by the API
-//   file_uid: string File UID as returned by the API
+//
+//	uid: string PhotoUID as returned by the API
+//	file_uid: string File UID as returned by the API
 func (v1 *V1Client) PhotoPrimary(uuid, fileuuid string) error {
 	resp := v1.POST(nil, "/api/v1/photos/%s/files/%s/primary", uuid, fileuuid)
 	return resp.Error
