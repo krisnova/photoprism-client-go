@@ -58,7 +58,7 @@ func TestMain(m *testing.M) {
 	}
 	err = app.Start()
 	if err == nil {
-		logger.Always("Stopping Photoprism Sample App for Unit Tests")
+		logger.Always("Stopping Photoprism Sample App for Unit Tests (deferred)")
 		defer func() {
 			err := app.Stop()
 			if err != nil {

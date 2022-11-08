@@ -21,17 +21,18 @@
 # Startup Script for the Application
 ####################################
 echo "Creating [SampleApp]"
+echo Home = $HOME
 
 # TODO Nova
 # TODO Per edude03ontwitch we want to actually mount /photoprism/whatever
-docker run -d \
+sudo docker run -d \
     --name photoprism \
     -p 8080:2342 \
     -e PHOTOPRISM_UPLOAD_NSFW="true" \
     -e PHOTOPRISM_ADMIN_PASSWORD="missy" \
-    -v ${GOPATH}/src/github.com/drummonds/photoprism-client-go/sample-app/photoprism/import:/photoprism/import \
-    -v ${GOPATH}/src/github.com/drummonds/photoprism-client-go/sample-app/photoprism/originals:/photoprism/originals \
-    -v ${GOPATH}/src/github.com/drummonds/photoprism-client-go/sample-app/photoprism/storage:/photoprism/storage \
+    -v $HOME/go/src/github.com/drummonds/photoprism-client-go/sample-app/photoprism/import:/photoprism/import \
+    -v $HOME/go/src/github.com/drummonds/photoprism-client-go/sample-app/photoprism/originals:/photoprism/originals \
+    -v $HOME/go/src/github.com/drummonds/photoprism-client-go/sample-app/photoprism/storage:/photoprism/storage \
     photoprism/photoprism:latest
 
 

@@ -20,5 +20,5 @@
 #
 # Startup Script for the Application
 ####################################
-docker logs -f --tail 100 photoprism
+sudo docker logs -f --tail 100 photoprism
 

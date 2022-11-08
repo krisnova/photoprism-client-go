@@ -17,6 +17,7 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -85,6 +86,7 @@ func (s *Script) Interpret() error {
 			continue
 		}
 		logger.Info("Executing: [%s]", cmdStr)
+		cmdStr = os.ExpandEnv(cmdStr)
 		result, err := Exec(cmdStr)
 		if err != nil {
 			return fmt.Errorf("error executing  running command [%s] on line [%d]\n%v\n", cmdStr, i+1, err)
