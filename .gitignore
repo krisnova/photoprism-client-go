@@ -16,3 +16,5 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+sample-app/photoprism/storage
+sample-app/photoprism/old_storage

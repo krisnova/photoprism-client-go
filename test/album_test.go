@@ -27,6 +27,17 @@ func TestHappyGetAlbum(t *testing.T) {
 	}
 }
 
+// Moving earlier in case album is deleted in later test
+func TestHappyGetAlbumDownload(t *testing.T) {
+	// GetAlbumDownload should return a .zip file
+	bytes, err := Client.V1().GetAlbumDownload(WellKnownAlbumID)
+	if err != nil {
+		t.Errorf("expecting album download: %v", err)
+		t.FailNow()
+	}
+	t.Logf("bytes of .zip file downloaded: %db", len(bytes))
+}
+
 func TestSadGetAlbum(t *testing.T) {
 	album, err := Client.V1().GetAlbum(UnknownAlbumID)
 	if err != nil {
@@ -72,7 +83,7 @@ func TestSadGetAlbums(t *testing.T) {
 		return
 	}
 
-	// Note: by defualt we return "{}" which counts as 1 album
+	// Note: by default we return "{}" which counts as 1 album
 	if len(albums) != 1 {
 		t.Errorf("Non zero length of albums")
 		t.FailNow()
@@ -231,8 +242,8 @@ func TestAlbumAddDeletePhoto(t *testing.T) {
 	for _, photo := range updatedPhotos {
 		updatedPhotoIDs = append(updatedPhotoIDs, photo.PhotoUID)
 	}
-	if len(updatedPhotos) != 1 {
-		t.Errorf("expecting 1 well known photo in album, found: %d", len(updatedPhotos))
+	if len(updatedPhotos) != 2 {
+		t.Errorf("expecting 2 well known photo in album, found: %d", len(updatedPhotos))
 	}
 
 	err = Client.V1().DeletePhotosFromAlbum(newAlbum.AlbumUID, updatedPhotoIDs)
@@ -261,16 +272,9 @@ func TestAlbumAddDeletePhoto(t *testing.T) {
 		t.Errorf("expected delete album %s, album not deleted: %v", newAlbum.AlbumUID, err)
 		t.FailNow()
 	}
-}
 
-func TestHappyGetAlbumDownload(t *testing.T) {
-	// GetAlbumDownload should return a .zip file
-	bytes, err := Client.V1().GetAlbumDownload(WellKnownAlbumID)
-	if err != nil {
-		t.Errorf("expecting album download: %v", err)
-		t.FailNow()
-	}
-	t.Logf("bytes of .zip file downloaded: %db", len(bytes))
+	// put the album back
+	CreateWellKnownAlbum()
 }
 
 func TestSadGetAlbumDownload(t *testing.T) {
