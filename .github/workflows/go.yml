@@ -6,12 +6,14 @@ name: Go
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
   pull_request:
     branches: [ "main" ]
 
 jobs:
-  lint:
-    name: Lint
+  vet:
+    name: Vet
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go
@@ -22,11 +24,8 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v1
 
-      - name: Lint Go Code
-        run: |
-          export PATH=$PATH:$(HOME)/go/bin # temporary fix. See https://github.com/actions/setup-go/issues/14
-          go get -u golang.org/x/lint/golint
-          make lint
+      - name: Vet Go Code
+        run: go vet ./...
 
 
   build:
@@ -37,7 +36,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18
+        go-version: 1.19
 
     - name: Build
       run: go build -v ./...
