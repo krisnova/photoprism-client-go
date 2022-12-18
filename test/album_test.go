@@ -1,22 +1,22 @@
-//  Copyright © 2021 Kris Nóva <kris@nivenly.com>
+// Copyright © 2021 Kris Nóva <kris@nivenly.com>
 //
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package test
 
 import (
 	"testing"
 
-	"github.com/kris-nova/photoprism-client-go/api/v1"
+	"github.com/drummonds/photoprism-client-go/api/v1"
 )
 
 func TestHappyGetAlbum(t *testing.T) {
@@ -25,6 +25,17 @@ func TestHappyGetAlbum(t *testing.T) {
 		t.Errorf("expected success getting well known album: %v", err)
 		t.FailNow()
 	}
+}
+
+// Moving earlier in case album is deleted in later test
+func TestHappyGetAlbumDownload(t *testing.T) {
+	// GetAlbumDownload should return a .zip file
+	bytes, err := Client.V1().GetAlbumDownload(WellKnownAlbumID)
+	if err != nil {
+		t.Errorf("expecting album download: %v", err)
+		t.FailNow()
+	}
+	t.Logf("bytes of .zip file downloaded: %db", len(bytes))
 }
 
 func TestSadGetAlbum(t *testing.T) {
@@ -72,7 +83,7 @@ func TestSadGetAlbums(t *testing.T) {
 		return
 	}
 
-	// Note: by defualt we return "{}" which counts as 1 album
+	// Note: by default we return "{}" which counts as 1 album
 	if len(albums) != 1 {
 		t.Errorf("Non zero length of albums")
 		t.FailNow()
@@ -231,8 +242,8 @@ func TestAlbumAddDeletePhoto(t *testing.T) {
 	for _, photo := range updatedPhotos {
 		updatedPhotoIDs = append(updatedPhotoIDs, photo.PhotoUID)
 	}
-	if len(updatedPhotos) != 1 {
-		t.Errorf("expecting 1 well known photo in album, found: %d", len(updatedPhotos))
+	if len(updatedPhotos) != 2 {
+		t.Errorf("expecting 2 well known photo in album, found: %d", len(updatedPhotos))
 	}
 
 	err = Client.V1().DeletePhotosFromAlbum(newAlbum.AlbumUID, updatedPhotoIDs)
@@ -261,16 +272,9 @@ func TestAlbumAddDeletePhoto(t *testing.T) {
 		t.Errorf("expected delete album %s, album not deleted: %v", newAlbum.AlbumUID, err)
 		t.FailNow()
 	}
-}
 
-func TestHappyGetAlbumDownload(t *testing.T) {
-	// GetAlbumDownload should return a .zip file
-	bytes, err := Client.V1().GetAlbumDownload(WellKnownAlbumID)
-	if err != nil {
-		t.Errorf("expecting album download: %v", err)
-		t.FailNow()
-	}
-	t.Logf("bytes of .zip file downloaded: %db", len(bytes))
+	// put the album back
+	CreateWellKnownAlbum()
 }
 
 func TestSadGetAlbumDownload(t *testing.T) {

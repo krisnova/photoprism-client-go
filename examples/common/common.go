@@ -11,22 +11,33 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package api
+package common
 
-// Index is used to sync the backend storage with
-// the database meta information
-//
-// POST /api/v1/index
-func (v1 *V1Client) Index() error {
-	resp := v1.POST(nil, "/api/v1/index")
-	return resp.Error
+import (
+	"fmt"
+	"os"
+
+	photoprism "github.com/drummonds/photoprism-client-go"
+
+	"github.com/kris-nova/logger"
+)
+
+// format string, a ...interface{}
+func Halt(code int, msg string, a ...interface{}) {
+	str := fmt.Sprintf(msg, a...)
+	logger.Critical(str)
+	os.Exit(code)
 }
 
-// CancelIndex can be used to attempt to cancel a running index
-// operation
-//
-// DELETE /api/v1/index
-func (v1 *V1Client) CancelIndex() error {
-	resp := v1.DELETE(nil, "/api/v1/index")
-	return resp.Error
+func auth() photoprism.ClientAuthenticator {
+	user := os.Getenv("PHOTOPRISM_USER")
+	if user == "" {
+		Halt(1, "Missing PHOTOPRISM_USER")
+	}
+	pass := os.Getenv("PHOTOPRISM_PASS")
+	if pass == "" {
+		Halt(2, "Missing PHOTOPRISM_PASS")
+	}
+	auth := photoprism.NewClientAuthLogin(user, pass)
+	return auth
 }

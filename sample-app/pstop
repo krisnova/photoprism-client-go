@@ -22,6 +22,6 @@
 ####################################
 echo "Stopping [SampleApp]"
 
-docker stop photoprism
-#docker rm photoprism
+sudo docker stop photoprism
+#sduo docker rm photoprism
 

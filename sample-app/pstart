@@ -22,11 +22,11 @@
 ####################################
 
 
-if [ $(docker ps -q -f name=photoprism) ]
-then
-  # Photoprism is running
-  echo "[SampleApp] is already running..."
-   exit 1
-fi
+# if [ $(sudo docker ps -q -f name=photoprism) ]
+# then
+#   # Photoprism is running
+#   echo "[SampleApp] is already running..."
+#    exit 1
+# fi
 echo "Starting [SampleApp]"
-docker start photoprism
+sudo docker start photoprism

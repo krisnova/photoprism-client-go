@@ -1,16 +1,16 @@
-//  Copyright © 2021 Kris Nóva <kris@nivenly.com>
+// Copyright © 2021 Kris Nóva <kris@nivenly.com>
 //
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package api
 
 import (
@@ -82,7 +82,8 @@ func (r *V1Response) JSON(i interface{}) error {
 // responses and return an error if a non 200 is encountered.
 //
 // Error Codes:
-//    -1   Unable to create request
+//
+//	-1   Unable to create request
 func (v1 *V1Client) GET(endpointFormat string, a ...interface{}) *V1Response {
 	url := v1.Endpoint(fmt.Sprintf(endpointFormat, a...))
 	//logger.Debug("GET [%s]", url)
@@ -121,9 +122,10 @@ func (v1 *V1Client) GET(endpointFormat string, a ...interface{}) *V1Response {
 // POST will accept a payload.
 //
 // Error Codes:
-//    -1   Unable to create request
-//    -2   Unable to write payload
-//    -3   Unable to JSON Marshal
+//
+//	-1   Unable to create request
+//	-2   Unable to write payload
+//	-3   Unable to JSON Marshal
 func (v1 *V1Client) POST(payload interface{}, endpointFormat string, a ...interface{}) *V1Response {
 	url := v1.Endpoint(fmt.Sprintf(endpointFormat, a...))
 	//logger.Debug("POST [%s]", url)
@@ -175,9 +177,10 @@ func (v1 *V1Client) POST(payload interface{}, endpointFormat string, a ...interf
 // PUT will accept a payload.
 //
 // Error Codes:
-//    -1   Unable to create request
-//    -2   Unable to write payload
-//    -3   Unable to JSON Marshal
+//
+//	-1   Unable to create request
+//	-2   Unable to write payload
+//	-3   Unable to JSON Marshal
 func (v1 *V1Client) PUT(payload interface{}, endpointFormat string, a ...interface{}) *V1Response {
 	url := v1.Endpoint(fmt.Sprintf(endpointFormat, a...))
 	//logger.Debug("POST [%s]", url)
@@ -229,9 +232,10 @@ func (v1 *V1Client) PUT(payload interface{}, endpointFormat string, a ...interfa
 // DELETE will accept a payload.
 //
 // Error Codes:
-//    -1   Unable to create request
-//    -2   Unable to write payload
-//    -3   Unable to JSON Marshal
+//
+//	-1   Unable to create request
+//	-2   Unable to write payload
+//	-3   Unable to JSON Marshal
 func (v1 *V1Client) DELETE(payload interface{}, endpointFormat string, a ...interface{}) *V1Response {
 	url := v1.Endpoint(fmt.Sprintf(endpointFormat, a...))
 	//logger.Debug("POST [%s]", url)

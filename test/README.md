@@ -1,10 +1,6 @@
 # Local Integration Tests
 
-To run the tests.
-
-```bash
-sudo -E go test . -v
-```
+Tests have been updated to run locally and also with github actions
 
 ### Adding a test
 

@@ -21,6 +21,6 @@
 # Startup Script for the Application
 ####################################
 echo "Destroying [SampleApp]"
-docker stop photoprism
-docker rm photoprism
+sudo docker stop photoprism
+sudo docker rm photoprism
 

@@ -10,7 +10,7 @@ Go client for the Photoprism Application.
 
 ```bash 
 
-go get github.com/kris-nova/photoprism-client-go
+go get github.com/drummonds/photoprism-client-go
 
 ```
 
@@ -60,7 +60,7 @@ import (
 	"io/ioutil"
 	"path"
 
-	photoprism "github.com/kris-nova/photoprism-client-go"
+	photoprism "github.com/drummonds/photoprism-client-go"
 	"github.com/kris-nova/logger"
 )
 
